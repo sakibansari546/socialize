@@ -1,0 +1,45 @@
+# Node modules
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS-specific files
+.DS_Store
+.env
+
+# Build output
+dist/
+build/
+
+# Dependency directories
+.yarn/
+.pnp/
+
+# Coverage
+coverage/
+    
+
+
+# React build output
+build/
+
+# Dependency directories
+node_modules/
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+.env
+
+# Editor files
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Other
+.cache/
+.next/
