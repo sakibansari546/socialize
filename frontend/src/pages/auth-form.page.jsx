@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import InputBox from '../components/input.conponent'
 import AnimationWrapper from '../common/AnimationWrapper';
 import { useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { signup } from '../store/userSlice';
 import axios from 'axios';
 import BtnLoader from '../components/btn-loader.components';
@@ -12,6 +12,7 @@ const AuthForm = ({ type }) => {
     const isSignup = type === 'signup';
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { isAuthenticated } = useSelector(state => state.user);
 
     const { handleSubmit, register, reset, formState: { errors } } = useForm()
     const [error, setError] = useState(null);
@@ -39,6 +40,7 @@ const AuthForm = ({ type }) => {
     }
 
     useEffect(() => {
+        if (isAuthenticated) navigate('/');
         reset()
     }, [type]);
 

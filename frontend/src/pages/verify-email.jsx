@@ -2,12 +2,13 @@ import { useNavigate } from 'react-router-dom';
 import React, { useState, useRef, useEffect } from 'react'
 import AnimationWrapper from '../common/AnimationWrapper';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { verifyOTP } from '../store/userSlice';
 
 const VerifyEmail = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { isAuthenticated } = useSelector(state => state.user);
 
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(null);
@@ -67,6 +68,10 @@ const VerifyEmail = () => {
         if (otp.every((digit) => digit !== "")) {
             console.log("OTP is:", otp.join(''));  // Logs the OTP
             verifyEmailOTP();
+        }
+
+        if (isAuthenticated) {
+            navigate('/');
         }
 
     }, [otp]);
