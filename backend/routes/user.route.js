@@ -1,6 +1,9 @@
 import { Router } from 'express';
-import { logout, signin, signup, verifyEmail } from '../controllers/user.controller.js';
+import { checkAuth, logout, signin, signup, verifyEmail } from '../controllers/user.controller.js';
+import { verifyJWT } from '../middlerwares/verifyJWT.js';
 const router = Router();
+
+router.get("/check-auth", verifyJWT, checkAuth)
 
 router.post('/signup', signup);
 router.post('/signin', signin);

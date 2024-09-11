@@ -47,7 +47,7 @@ export const signup = async (req, res) => {
                 genrateTokenAndSetCookie(res, existingUser._id);
                 sendVerificationEmail(existingUser.email, verificationToken);
 
-                return res.status(401).json({ success: false, message: "Email not verified, new verification code sent to your email" });
+                return res.status(401).json({ success: true, message: "Email not verified, new verification code sent to your email" });
             }
 
             return res.status(400).json({ success: false, message: "Email already exists" });
@@ -111,7 +111,6 @@ export const verifyEmail = async (req, res) => {
 
         await user.save();
 
-        genrateTokenAndSetCookie(res, user._id);
         sendWelcomeEmail(user.email, user.username)
 
         res.status(200).json({ success: true, message: "Email verified successfully", user: user });
@@ -164,3 +163,14 @@ export const logout = async (req, res) => {
         res.status(500).json({ success: false, message: "Something went wrong" });
     }
 };
+
+export const checkAuth = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId).select("-password -__v");
+        if (!user) return res.status(404).json({ success: false, message: "User not found" });
+        res.status(200).json({ success: true, user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Something went wrong" });
+    }
+}
+
