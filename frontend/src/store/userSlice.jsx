@@ -33,9 +33,13 @@ export const userSlice = createSlice({
         passwordReset: (state, action) => {
             state.user = action.payload;
         },
+        logout: (state) => {
+            state.user = null;
+            state.isAuthenticated = false;
+        },
     },
 })
 
-export const { signup, verifyOTP, checkUserAuth, passwordReset } = userSlice.actions
+export const { signup, verifyOTP, checkUserAuth, passwordReset, logout } = userSlice.actions
 
 export default userSlice.reducer

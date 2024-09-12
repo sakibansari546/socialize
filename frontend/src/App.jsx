@@ -10,6 +10,7 @@ import CheckEmailForPassword from './pages/forgot-passowrd/check-email-reset-pas
 import ResetPassword from './pages/forgot-passowrd/reset-password.page';
 import Home from './pages/home.page';
 import { checkUserAuth } from './store/userSlice';
+import LeftSideBar from './components/left-sidebar-component';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading, isCheckingAuth } = useSelector(state => state.user);
@@ -61,8 +62,11 @@ function App() {
       <Route path='/signin' element={<AuthForm type='signin' />} />
       <Route path='/verify-email' element={<VerifyEmail />} />
 
-      {/* Protected Route for authenticated users */}
-      <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
+      {/* Left sidebar route with nested routes */}
+      <Route path='/' element={<LeftSideBar />}>
+        {/* Home route protected by ProtectedRoute */}
+        <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
+      </Route>
     </Routes>
   );
 }

@@ -158,10 +158,14 @@ export const signin = async (req, res) => {
 
 export const logout = async (req, res) => {
     try {
-        res.cookie("token", "", { maxAge: 1 });
-        res.status(200).json({ success: true, message: "User logged out successfully" });
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'Strict',
+        });
+        return res.status(200).json({ success: true, message: "User logged out successfully" });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Something went wrong" });
+        return res.status(500).json({ success: false, message: "Something went wrong" });
     }
 };
 
