@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     user: null,
+    userProfile: null,
     isLoading: false,
     isAuthenticated: false,
     isCheckingAuth: true, // Starts as true to indicate the app is checking auth
@@ -37,9 +38,12 @@ export const userSlice = createSlice({
             state.user = null;
             state.isAuthenticated = false;
         },
+        getUserProfile: (state, action) => {
+            state.userProfile = action.payload;
+        },
     },
 })
 
-export const { signup, verifyOTP, checkUserAuth, passwordReset, logout } = userSlice.actions
+export const { signup, verifyOTP, checkUserAuth, passwordReset, logout, getUserProfile } = userSlice.actions
 
 export default userSlice.reducer

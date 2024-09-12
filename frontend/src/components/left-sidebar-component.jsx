@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 // import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Heart, Home, LogOut, MessageCircle, PlusSquare, Search, TrendingUp } from 'lucide-react'
@@ -17,8 +17,9 @@ const sidebarItems = [
 ]
 
 const LeftSideBar = () => {
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const location = useLocation();
     const { user } = useSelector(state => state.user);
 
     const handleLogout = async () => {
@@ -42,13 +43,15 @@ const LeftSideBar = () => {
 
                     <div className='w-full h-16 mb-2'>
                         <div className='relative w-full h-full bg-white flex items-center justify-start'>
-                            <Link className='absolute z-50 w-full h-full flex px-20 items-center justify-between text-xl'>
+                            <Link to={'/'} className='absolute z-50 w-full h-full flex px-20 items-center justify-between text-xl'>
                                 <span>Home</span>
                                 <div>
                                     <i className={`fi fi-rs-house-chimney mt-1`}></i>
                                 </div>
                             </Link>
-                            <div className='w-[20vw] h-16 absolute top-2 left-2 bg-black -z-20'></div>
+                            {
+                                location.pathname === '/' && <div className='w-[20vw] h-16 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
+                            }
                         </div>
                     </div>
                     <div className='w-full h-16 mb-2'>
@@ -59,7 +62,9 @@ const LeftSideBar = () => {
                                     <i className={`fi fi-bs-search mt-1`}></i>
                                 </div>
                             </Link>
-                            <div className='w-[20vw] h-16 absolute top-2 left-2 bg-black -z-20'></div>
+                            {
+                                location.pathname === '/search' && <div className='w-[20vw] h-16 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
+                            }
                         </div>
                     </div>
                     <div className='w-full h-16 mb-2'>
@@ -70,7 +75,9 @@ const LeftSideBar = () => {
                                     <i className={`fi fi-br-arrow-trend-up mt-1`}></i>
                                 </div>
                             </Link>
-                            <div className='w-[20vw] h-16 absolute top-2 left-2 bg-black -z-20'></div>
+                            {
+                                location.pathname === '/explore' && <div className='w-[20vw] h-16 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
+                            }
                         </div>
                     </div>
                     <div className='w-full h-16 mb-2'>
@@ -81,7 +88,9 @@ const LeftSideBar = () => {
                                     <i className={`fi fi-rr-square-plus mt-1`}></i>
                                 </div>
                             </Link>
-                            <div className='w-[20vw] h-16 absolute top-2 left-2 bg-black -z-20'></div>
+                            {
+                                location.pathname === '/create' && <div className='w-[20vw] h-16 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
+                            }
                         </div>
                     </div>
                     <div className='w-full h-16 mb-2'>
@@ -92,7 +101,9 @@ const LeftSideBar = () => {
                                     <i className={`fi fi-rr-comment-alt-dots mt-1`}></i>
                                 </div>
                             </Link>
-                            <div className='w-[20vw] h-16 absolute top-2 left-2 bg-black -z-20'></div>
+                            {
+                                location.pathname === '/message' && <div className='w-[20vw] h-16 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
+                            }
                         </div>
                     </div>
                     <div className='w-full h-16 mb-2'>
@@ -103,7 +114,9 @@ const LeftSideBar = () => {
                                     <i className={`fi fi-rr-bell mt-1`}></i>
                                 </div>
                             </Link>
-                            <div className='w-[20vw] h-16 absolute top-2 left-2 bg-black -z-20'></div>
+                            {
+                                location.pathname === '/notification' && <div className='w-[20vw] h-16 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
+                            }
                         </div>
                     </div>
                     <div className='w-full h-16 mb-2'>
@@ -112,7 +125,9 @@ const LeftSideBar = () => {
                                 <img className='w-8 h-8 rounded-full' src={user?.profile_img} alt="" />
                                 <span>{user?.username}</span>
                             </Link>
-                            <div className='w-[20vw] h-16 absolute top-2 left-2 bg-black -z-20'></div>
+                            {
+                                location.pathname === `/profile/${user._id}` && <div className='w-[20vw] h-16 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
+                            }
                         </div>
                     </div>
                     <div className='w-full h-16 mb-2'>
@@ -123,7 +138,9 @@ const LeftSideBar = () => {
                                     <i className={`fi fi-bs-sign-out-alt mt-1`}></i>
                                 </button>
                             </div>
-                            <div className='w-[20vw] h-16 absolute top-2 left-2 bg-black -z-20'></div>
+                            {
+                                location.pathname === '/logout' && <div className='w-[20vw] h-16 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
+                            }
                         </div>
                     </div>
 
