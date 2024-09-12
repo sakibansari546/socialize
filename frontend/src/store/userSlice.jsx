@@ -29,10 +29,13 @@ export const userSlice = createSlice({
                 state.isAuthenticated = false;
             }
             state.isCheckingAuth = false; // Auth check completed
-        }
+        },
+        passwordReset: (state, action) => {
+            state.user = action.payload;
+        },
     },
 })
 
-export const { signup, verifyOTP, checkUserAuth } = userSlice.actions
+export const { signup, verifyOTP, checkUserAuth, passwordReset } = userSlice.actions
 
 export default userSlice.reducer

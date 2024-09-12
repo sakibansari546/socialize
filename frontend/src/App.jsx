@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import AuthForm from './pages/auth-form.page';
 import VerifyEmail from './pages/verify-email';
-import VerifyResetEmail from './pages/forgot-passowrd/verify-reset-password.page';
+import VerifyResetEmail from './pages/forgot-passowrd/forgot-password.page';
 import CheckEmailForPassword from './pages/forgot-passowrd/check-email-reset-pass.page';
 import ResetPassword from './pages/forgot-passowrd/reset-password.page';
 import Home from './pages/home.page';

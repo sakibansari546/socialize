@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import AnimationWrapper from '../../common/AnimationWrapper';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import BtnLoader from '../../components/btn-loader.components';
 
 const VerifyResetEmail = () => {
     const navigate = useNavigate();
@@ -16,7 +17,18 @@ const VerifyResetEmail = () => {
     const { handleSubmit, register } = useForm();
 
     const handleFormSubmit = async (data) => {
-        const res = await axios.post("http://localhost:3000/api/user/forgot-password", data, { withCredentials: true })
+        try {
+            setIsloading(true)
+            const res = await axios.post("http://localhost:3000/api/user/forgot-password", data, { withCredentials: true })
+            if (res.data.success) {
+                navigate('/check-email')
+            }
+        } catch (error) {
+            setError(error.response.data.message);
+            console.log(error.respose.data.message);
+        } finally {
+            setIsloading(false)
+        }
     }
 
     return (
@@ -28,8 +40,14 @@ const VerifyResetEmail = () => {
                 <form onSubmit={handleSubmit(handleFormSubmit)} className='relative' >
                     <InputBox label='Email' icon='fi-br-at' {...register("email")} placeholder='email' type='email' />
 
-                    <button onClick={() => navigate('/check-email')} className='w-14 h-10 bg-black text-white absolute top-0 right-0 z-20 felx items-center'><i className="fi fi-br-arrow-right text-white text-2xl pt-1"></i></button>
+                    <button disabled={loading} type='submit' className='w-14 h-10 bg-black text-white absolute top-0 right-0 z-20 felx items-center'>
+                        {
+                            loading ? <BtnLoader /> : <i className="fi fi-br-arrow-right text-white text-2xl pt-1"></i>
+                        }
+
+                    </button>
                 </form>
+                {error && <p className='text-red-500 font-semibold text-center w-full my-3 py-0'>{error}</p>}
             </div>
         </AnimationWrapper>
     )

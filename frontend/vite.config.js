@@ -8,5 +8,19 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+    //   proxy: {
+    //     "/api": {
+    //       target: "XXXXXXXXXXXXXXXXXXXXX",
+    //       changeOrigin: true,
+    //     },
+    //   },
+    // },
+    // server: {
+    //   proxy: {
+    //     "/api": {
+    //       target: "XXXXXXXXXXXXXXXXXXXXX",
+    //       changeOrigin: true,
+    //     },
+    //   },
   },
 })
