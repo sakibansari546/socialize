@@ -1,15 +1,22 @@
-import React from 'react'
+import { useDispatch } from 'react-redux';
+import React, { useState } from 'react'
 import InputBox from '../../components/input.conponent'
 import { useForm } from 'react-hook-form'
 import AnimationWrapper from '../../common/AnimationWrapper';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const VerifyResetEmail = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const [loading, setIsloading] = useState(false)
+    const [error, setError] = useState(null)
+
     const { handleSubmit, register } = useForm();
 
-    const handleFormSubmit = (data) => {
-        console.log(data);
+    const handleFormSubmit = async (data) => {
+        const res = await axios.post("http://localhost:3000/api/user/forgot-password", data, { withCredentials: true })
     }
 
     return (

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import InputBox from '../components/input.conponent'
-import AnimationWrapper from '../common/AnimationWrapper';
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux';
-import { signup } from '../store/userSlice';
 import axios from 'axios';
+
+import InputBox from '../components/input.conponent'
+import AnimationWrapper from '../common/AnimationWrapper';
 import BtnLoader from '../components/btn-loader.components';
+
+import { signup } from '../store/userSlice';
 
 const AuthForm = ({ type }) => {
     const isSignup = type === 'signup';
@@ -19,16 +21,14 @@ const AuthForm = ({ type }) => {
     const [loading, setLoading] = useState(false);
 
 
-    const handleFromSubmit = async (data) => {
+    const handleFormSubmit = async (data) => {
         try {
             setLoading(true);
             const res = await axios.post(`http://localhost:3000/api/user/${type}`, data, { withCredentials: true });
             console.log(res);
             dispatch(signup(res.data.user));
-            if (isSignup) {
-                if (res.data.success) navigate('/verify-email');
-            }
-            else {
+            if (type === 'signup') navigate('/verify-email');
+            if (type === 'signin') {
                 navigate('/');
             }
         } catch (error) {
@@ -53,7 +53,7 @@ const AuthForm = ({ type }) => {
                 </h1>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit(handleFromSubmit)} className='flex flex-col items-center justify-center gap-5 w-[70vw] sm:w-[40vw] md:w-[40vw] lg:w-[25vw]'>
+                <form onSubmit={handleSubmit(handleFormSubmit)} className='flex flex-col items-center justify-center gap-5 w-[70vw] sm:w-[40vw] md:w-[40vw] lg:w-[25vw]'>
 
                     {/* Username field */}
                     {
@@ -73,7 +73,7 @@ const AuthForm = ({ type }) => {
                             <input type='checkbox' id='terms' className='w-5 h-5' required />
                             <label htmlFor='terms' className='font-mono'>Remember</label>
                         </div>
-                        <Link to='/verify-reset-email'>
+                        <Link to='/forgot-password'>
                             <p className='text-md font-mono hover:underline'>Forgot password</p>
                         </Link>
                     </div>

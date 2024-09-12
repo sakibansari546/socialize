@@ -70,10 +70,6 @@ const VerifyEmail = () => {
             verifyEmailOTP();
         }
 
-        if (isAuthenticated) {
-            navigate('/');
-        }
-
     }, [otp]);
 
     return (
