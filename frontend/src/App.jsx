@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { Toaster } from 'sonner'
 import axios from 'axios';
+
 
 import AuthForm from './pages/auth-form.page';
 import VerifyEmail from './pages/verify-email';
@@ -44,7 +46,7 @@ function App() {
           dispatch(checkUserAuth(null));
         }
       } catch (error) {
-        console.log(error);
+        console.log(error.response.data.message);
         dispatch(checkUserAuth(null));
       }
     };
@@ -52,24 +54,28 @@ function App() {
   }, [dispatch, navigate]);
 
   return (
-    <Routes>
-      {/* Password Forgot */}
-      <Route path='/forgot-password' element={<VerifyResetEmail />} />
-      <Route path='/check-email' element={<CheckEmailForPassword />} />
-      <Route path='/reset-password/:token' element={<ResetPassword />} />
+    <>
 
-      {/* Authenticated Routes */}
-      <Route path='/signup' element={<AuthForm type='signup' />} />
-      <Route path='/signin' element={<AuthForm type='signin' />} />
-      <Route path='/verify-email' element={<VerifyEmail />} />
+      <Toaster size='large' position="top-right" />
+      <Routes>
+        {/* Password Forgot */}
+        <Route path='/forgot-password' element={<VerifyResetEmail />} />
+        <Route path='/check-email' element={<CheckEmailForPassword />} />
+        <Route path='/reset-password/:token' element={<ResetPassword />} />
 
-      {/* Left sidebar route with nested routes */}
-      <Route path='/' element={<LeftSideBar />}>
-        {/* Home route protected by ProtectedRoute */}
-        <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
-        <Route path='/profile/:userId' element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-      </Route>
-    </Routes>
+        {/* Authenticated Routes */}
+        <Route path='/signup' element={<AuthForm type='signup' />} />
+        <Route path='/signin' element={<AuthForm type='signin' />} />
+        <Route path='/verify-email' element={<VerifyEmail />} />
+
+        {/* Left sidebar route with nested routes */}
+        <Route path='/' element={<LeftSideBar />}>
+          {/* Home route protected by ProtectedRoute */}
+          <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
+          <Route path='/profile/:userId' element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+        </Route>
+      </Routes>
+    </>
   );
 }
 

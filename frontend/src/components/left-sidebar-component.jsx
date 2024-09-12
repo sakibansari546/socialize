@@ -6,6 +6,7 @@ import { Heart, Home, LogOut, MessageCircle, PlusSquare, Search, TrendingUp } fr
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { logout } from '../store/userSlice'
+import { toast } from 'sonner'
 const sidebarItems = [
     { icon: 'fi-rs-house-chimney', text: 'Home' },
     { icon: 'fi-bs-search', text: 'Search' },
@@ -28,6 +29,7 @@ const LeftSideBar = () => {
             console.log(res.data);
             if (res.data.success) {
                 dispatch(logout())
+                toast.success("Logged out successfully!")
                 navigate('/signin');
             }
         } catch (error) {
@@ -121,12 +123,12 @@ const LeftSideBar = () => {
                     </div>
                     <div className='w-full h-16 mb-2'>
                         <div className='relative w-full h-full bg-white flex items-center justify-start'>
-                            <Link to={`/profile/${user._id}`} className='absolute z-50 w-full h-full flex px-24 items-center justify-between text-xl'>
+                            <Link to={`/profile/${user?._id}`} className='absolute z-50 w-full h-full flex px-24 items-center justify-between text-xl'>
                                 <img className='w-8 h-8 rounded-full' src={user?.profile_img} alt="" />
                                 <span>{user?.username}</span>
                             </Link>
                             {
-                                location.pathname === `/profile/${user._id}` && <div className='w-[20vw] h-16 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
+                                location.pathname === `/profile/${user?._id}` && <div className='w-[20vw] h-16 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
                             }
                         </div>
                     </div>

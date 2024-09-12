@@ -9,6 +9,7 @@ import AnimationWrapper from '../common/AnimationWrapper';
 import BtnLoader from '../components/btn-loader.components';
 
 import { signup } from '../store/userSlice';
+import { toast } from 'sonner';
 
 const AuthForm = ({ type }) => {
     const isSignup = type === 'signup';
@@ -26,10 +27,13 @@ const AuthForm = ({ type }) => {
             setLoading(true);
             const res = await axios.post(`http://localhost:3000/api/user/${type}`, data, { withCredentials: true });
             console.log(res);
-            dispatch(signup(res.data.user));
-            if (type === 'signup') navigate('/verify-email');
-            if (type === 'signin') {
-                navigate('/');
+            if (res.data.success) {
+                dispatch(signup(res.data.user));
+                if (type === 'signup') navigate('/verify-email');
+                if (type === 'signin') {
+                    navigate('/');
+                    toast.success('Logged in successfully');
+                }
             }
         } catch (error) {
             console.log(error);

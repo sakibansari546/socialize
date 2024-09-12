@@ -4,6 +4,7 @@ import AnimationWrapper from '../common/AnimationWrapper';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { verifyOTP } from '../store/userSlice';
+import { toast } from 'sonner';
 
 const VerifyEmail = () => {
     const navigate = useNavigate();
@@ -53,6 +54,7 @@ const VerifyEmail = () => {
 
                 if (res.data.success) {
                     dispatch(verifyOTP(res.data.user));
+                    toast.success('Logged in successfully');
                     navigate('/');
                 } else {
                     setError(res.data.message || "Invalid token");
