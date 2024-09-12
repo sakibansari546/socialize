@@ -37,7 +37,7 @@ const LeftSideBar = () => {
     return (
         <>
             <div>
-                <div className='w-[20vw] h-screen sticky left-0 top-0 -z-40  bg-[#efefef]'>
+                <div className='w-[20vw] h-screen fixed left-0 top-0 bg-[#efefef]'>
                     <h1 className='text-3xl font-mono font-bold text-center py-8'>SocialiZe</h1>
 
                     <div className='w-full h-16 mb-2'>
@@ -108,10 +108,9 @@ const LeftSideBar = () => {
                     </div>
                     <div className='w-full h-16 mb-2'>
                         <div className='relative w-full h-full bg-white flex items-center justify-start'>
-                            <Link className='absolute z-50 w-full h-full flex px-24 items-center justify-between text-xl'>
+                            <Link to={`/profile/${user._id}`} className='absolute z-50 w-full h-full flex px-24 items-center justify-between text-xl'>
                                 <img className='w-8 h-8 rounded-full' src={user?.profile_img} alt="" />
                                 <span>{user?.username}</span>
-
                             </Link>
                             <div className='w-[20vw] h-16 absolute top-2 left-2 bg-black -z-20'></div>
                         </div>
@@ -127,7 +126,6 @@ const LeftSideBar = () => {
                             <div className='w-[20vw] h-16 absolute top-2 left-2 bg-black -z-20'></div>
                         </div>
                     </div>
-
 
 
                 </div>

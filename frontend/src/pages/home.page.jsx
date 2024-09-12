@@ -10,7 +10,7 @@ const Home = () => {
 
     return (
         <>
-            <div className=' flex '>
+            <div className='flex '>
                 <Feed />
                 <SuggestedUser />
             </div>

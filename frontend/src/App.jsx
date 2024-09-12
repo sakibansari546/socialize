@@ -11,6 +11,7 @@ import ResetPassword from './pages/forgot-passowrd/reset-password.page';
 import Home from './pages/home.page';
 import { checkUserAuth } from './store/userSlice';
 import LeftSideBar from './components/left-sidebar-component';
+import ProfilePage from './pages/profile.page';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading, isCheckingAuth } = useSelector(state => state.user);
@@ -66,6 +67,7 @@ function App() {
       <Route path='/' element={<LeftSideBar />}>
         {/* Home route protected by ProtectedRoute */}
         <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path='/profile/:userId' element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
       </Route>
     </Routes>
   );
