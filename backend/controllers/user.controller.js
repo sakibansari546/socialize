@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 import User from '../models/user.model.js';
 import { genrateTokenAndSetCookie } from '../utils/genrateTokenAndSetCookie.js';
-import { sendVerificationEmail, sendWelcomeEmail } from '../nodemailer/emails.js';
+import { sendPasswordResetEmail, sendVerificationEmail, sendWelcomeEmail } from '../nodemailer/emails.js';
 
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
 const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
@@ -174,3 +175,74 @@ export const checkAuth = async (req, res) => {
     }
 }
 
+export const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        // Validate email format
+        if (!emailRegex.test(email)) { // Fixed typo: .tast -> .test
+            return res.status(400).json({ message: "Invalid email", success: false });
+        }
+
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+        // Check if reset password token is already generated and not expired
+        if (user.resetPasswordExpiresAt && user.resetPasswordExpiresAt > Date.now()) {
+            return res.status(400).json({ message: "Password reset link already sent to your email", success: false });
+        }
+
+        // Check if email is verified
+        if (!user.isVerified) {
+            return res.status(400).json({ message: "Email not verified", success: false });
+        }
+
+        const resetToken = crypto.randomBytes(20).toString("hex");
+        user.resetPasswordToken = resetToken;
+        user.resetPasswordExpiresAt = Date.now() + 1 * 60 * 60 * 1000; // 1 hour
+        await user.save();
+
+        const passwordResetLink = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+
+        sendPasswordResetEmail(user.email, passwordResetLink);
+
+        res.status(200).json({ success: true, message: "Password reset link sent to your email" });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Something went wrong" });
+    }
+}
+
+export const resetPassword = async (req, res) => {
+    try {
+        const { password } = req.body;
+        const { token } = req.params;
+
+        // Validate password format
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ success: false, message: "Password must be between 6 and 20 characters long and contain at least one uppercase letter, one lowercase letter, and one number" });
+        }
+
+        const user = await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpiresAt: { $gt: Date.now() },
+        });
+
+        if (!user) {
+            return res.status(400).json({ success: false, message: "Invalid or expired token" });
+        }
+
+        if (!user.isVerified) return res.status(400).json({ success: false, message: "Email not verified" })
+
+        const hash_password = await bcrypt.hash(password, 10);
+        user.password = hash_password;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpiresAt = undefined;
+        await user.save();
+
+        res.status(200).json({ success: true, message: "Password reset successfully" });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Something went wrong" });
+    }
+}
