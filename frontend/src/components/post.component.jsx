@@ -9,7 +9,7 @@ const Post = () => {
                         <div className='flex gap-3 items-center'>
                             <img className='w-10 h-10 rounded-full' src="https://xsgames.co/randomusers/avatar.php?g=female" alt="" />
                             <div>
-                                <h2 className='text-md' >username</h2>
+                                <h2 className='text-md font-semibold'>@username</h2>
                                 <p className='text-sm text-gray-500'>12/21/210</p>
                             </div>
                         </div>
@@ -35,7 +35,7 @@ const Post = () => {
                 </div>
                 <div className='text-lg'><span className='font-semibold'>10</span> likes</div>
                 <div>
-                    <p><span className='font-semibold'>username : </span> Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</p>
+                    <p><span className='font-semibold'>@username : </span> Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</p>
                 </div>
                 <button className='text-sm text-gray-500 py-2 hover:underline'>view all 10 comments</button>
                 <div className='flex items-center gap-3'>

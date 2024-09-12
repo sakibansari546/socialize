@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
+
 const SuggestedUser = () => {
-    const { user } = useSelector(state => state.user);
+    const { user, suggestedUsers } = useSelector(state => state.user);
+
     return (
         <>
             <div className='ml-4 w-[29vw] h-screen fixed top-0 right-0 bg-[#efefef] flex flex-col gap-3 items-center py-10'>
@@ -25,43 +27,26 @@ const SuggestedUser = () => {
                 <div>
                     <h1 className='w-[20vw] text-left font-bold my-5'>Suggested for you</h1>
                 </div>
+                {
+                    suggestedUsers?.length === 0 && <p>No suggested users</p>
+                }
+                {
+                    suggestedUsers?.map((sugg, index) => (
+                        <div className='relative z-30 w-[20vw] h-16 bg-white flex items-center justify-between px-3'>
+                            <Link to={`/profile/${sugg?._id}`} className='flex items-center gap-3'>
+                                <img className='border w-10 h-10 rounded-full object-cover' src={sugg?.profile_img} alt="" />
+                                <div>
+                                    <p className='font-semibold'>@{sugg?.username}</p>
+                                    <p>{sugg?.fullname}</p>
+                                </div>
+                            </Link>
+                            <div>
+                                <button className='font-bold'>Follow</button>
+                            </div>
+                        </div>
+                    ))
+                }
 
-                <div className='relative z-30 w-[20vw] h-16 bg-white flex items-center justify-between px-3'>
-                    <div className='flex items-center gap-3'>
-                        <img className='w-10 h-10 rounded-full object-cover' src="https://xsgames.co/randomusers/avatar.php?g=female" alt="" />
-                        <div>
-                            <p className='font-semibold'>@username</p>
-                            <p>Fullname</p>
-                        </div>
-                    </div>
-                    <div>
-                        <button className='font-bold'>Follow</button>
-                    </div>
-                </div>
-                <div className='relative z-30 w-[20vw] h-16 bg-white flex items-center justify-between px-3'>
-                    <div className='flex items-center gap-3'>
-                        <img className='w-10 h-10 rounded-full object-cover' src="https://xsgames.co/randomusers/avatar.php?g=female" alt="" />
-                        <div>
-                            <p className='font-semibold'>@username</p>
-                            <p>Fullname</p>
-                        </div>
-                    </div>
-                    <div>
-                        <button className='font-bold'>Follow</button>
-                    </div>
-                </div>
-                <div className='relative z-30 w-[20vw] h-16 bg-white flex items-center justify-between px-3'>
-                    <div className='flex items-center gap-3'>
-                        <img className='w-10 h-10 rounded-full object-cover' src="https://xsgames.co/randomusers/avatar.php?g=female" alt="" />
-                        <div>
-                            <p className='font-semibold'>@username</p>
-                            <p>Fullname</p>
-                        </div>
-                    </div>
-                    <div>
-                        <button className='font-bold'>Follow</button>
-                    </div>
-                </div>
             </div>
         </>
     )
