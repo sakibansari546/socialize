@@ -316,3 +316,33 @@ export const editProfile = async (req, res) => {
         res.status(500).json({ success: false, message: "Something went wrong" });
     }
 };
+
+export const followOrUnfollow = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const user = await User.findById(req.userId);
+        const userToFollow = await User.findById(userId);
+
+        if (!userToFollow) return res.status(404).json({ success: false, message: "User not found" });
+
+        if (userId === req.userId.toString()) return res.status(400).json({ success: false, message: "You cannot follow yourself" })
+
+        const isFollowing = user.following.includes(userId);
+
+        if (isFollowing) {
+            // Unfollow
+            user.following = user.following.filter(id => id.toString() !== userId);
+            userToFollow.followers = userToFollow.followers.filter(id => id.toString() !== req.userId);
+            res.status(200).json({ success: true, message: "Unfollowed successfully" });
+        } else {
+            // Follow
+            user.following.push(userId);
+            userToFollow.followers.push(req.userId);
+            res.status(200).json({ success: true, message: "Followed successfully" });
+        }
+
+        await Promise.all([user.save(), userToFollow.save()]);
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Something went wrong" });
+    }
+}
