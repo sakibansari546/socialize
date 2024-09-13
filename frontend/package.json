@@ -11,6 +11,10 @@
   },
   "dependencies": {
     "@flaticon/flaticon-uicons": "^2.4.0",
+    "@radix-ui/react-avatar": "^1.1.0",
+    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@reduxjs/toolkit": "^2.2.7",
     "@shadcn/ui": "^0.0.4",

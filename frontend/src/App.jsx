@@ -14,6 +14,7 @@ import Home from './pages/home.page';
 import { checkUserAuth } from './store/userSlice';
 import LeftSideBar from './components/left-sidebar-component';
 import ProfilePage from './pages/profile.page';
+import EditProfile from './pages/edit-profile.page';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading, isCheckingAuth } = useSelector(state => state.user);
@@ -46,7 +47,7 @@ function App() {
           dispatch(checkUserAuth(null));
         }
       } catch (error) {
-        console.log(error.response.data.message);
+        // console.log(error.response.data.message);
         dispatch(checkUserAuth(null));
       }
     };
@@ -73,6 +74,7 @@ function App() {
           {/* Home route protected by ProtectedRoute */}
           <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path='/profile/:userId' element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path='/edit-profile/:userId' element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
         </Route>
       </Routes>
     </>

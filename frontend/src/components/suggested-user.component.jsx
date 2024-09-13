@@ -32,7 +32,7 @@ const SuggestedUser = () => {
                 }
                 {
                     suggestedUsers?.map((sugg, index) => (
-                        <div className='relative z-30 w-[20vw] h-16 bg-white flex items-center justify-between px-3'>
+                        <div key={index} className='relative z-30 w-[20vw] h-16 bg-white flex items-center justify-between px-3'>
                             <Link to={`/profile/${sugg?._id}`} className='flex items-center gap-3'>
                                 <img className='border w-10 h-10 rounded-full object-cover' src={sugg?.profile_img} alt="" />
                                 <div>
