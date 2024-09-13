@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
+import AnimationWrapper from '../common/AnimationWrapper';
 
-const SuggestedUser = () => {
+const SuggestedUser = ({ loading, setLoading }) => {
     const { user, suggestedUsers } = useSelector(state => state.user);
 
     return (
-        <>
+        <AnimationWrapper>
             <div className='ml-4 w-[29vw] h-screen fixed top-0 right-0 bg-[#efefef] flex flex-col gap-3 items-center py-10'>
                 <div className='relative'>
                     <div className='relative z-30 w-[20vw] h-16 bg-white flex items-center justify-between px-3'>
@@ -28,27 +29,29 @@ const SuggestedUser = () => {
                     <h1 className='w-[20vw] text-left font-bold my-5'>Suggested for you</h1>
                 </div>
                 {
-                    suggestedUsers?.length === 0 && <p>No suggested users</p>
+                    suggestedUsers?.length === 0 && <p className='text-xl font-semibold'>No suggested users</p>
                 }
                 {
-                    suggestedUsers?.map((sugg, index) => (
-                        <div key={index} className='relative z-30 w-[20vw] h-16 bg-white flex items-center justify-between px-3'>
-                            <Link to={`/profile/${sugg?._id}`} className='flex items-center gap-3'>
-                                <img className='border w-10 h-10 rounded-full object-cover' src={sugg?.profile_img} alt="" />
+                    !loading ? suggestedUsers?.map((sugg, index) => (
+                        <AnimationWrapper >
+                            <div key={index} className='relative z-30 w-[20vw] h-16 bg-white flex items-center justify-between px-3'>
+                                <Link to={`/profile/${sugg?._id}`} className='flex items-center gap-3'>
+                                    <img className='border w-10 h-10 rounded-full object-cover' src={sugg?.profile_img} alt="" />
+                                    <div>
+                                        <p className='font-semibold'>@{sugg?.username}</p>
+                                        <p>{sugg?.fullname}</p>
+                                    </div>
+                                </Link>
                                 <div>
-                                    <p className='font-semibold'>@{sugg?.username}</p>
-                                    <p>{sugg?.fullname}</p>
+                                    <button className='font-bold'>Follow</button>
                                 </div>
-                            </Link>
-                            <div>
-                                <button className='font-bold'>Follow</button>
                             </div>
-                        </div>
-                    ))
+                        </AnimationWrapper>
+                    )) : "Loading..."
                 }
 
             </div>
-        </>
+        </AnimationWrapper>
     )
 }
 

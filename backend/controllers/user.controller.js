@@ -278,6 +278,11 @@ export const editProfile = async (req, res) => {
     const profileImage = req.file;
 
     try {
+        if (!username) return res.status(400).json({ message: "Username is required", success: false });
+        if (!fullname) return res.status(400).json({ message: "Fullname is required", success: false });
+        if (!bio) return res.status(400).json({ message: "Bio is required", success: false });
+        if (bio.length > 100) return res.status(400).json({ message: "Bio should be less than 100 characters", success: false })
+
         const user = await User.findById(req.userId).select('-password');
         if (!user) return res.status(400).json({ message: "User not found", success: false });
 

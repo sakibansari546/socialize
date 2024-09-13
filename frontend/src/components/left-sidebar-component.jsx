@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { logout } from '../store/userSlice'
 import { toast } from 'sonner'
+import AnimationWrapper from '../common/AnimationWrapper'
 const sidebarItems = [
     { icon: 'fi-rs-house-chimney', text: 'Home' },
     { icon: 'fi-bs-search', text: 'Search' },
@@ -38,9 +39,9 @@ const LeftSideBar = () => {
     }
 
     return (
-        <>
+        <AnimationWrapper>
             <div>
-                <div className='w-[20vw] h-screen fixed left-0 top-0 bg-[#efefef]'>
+                <div className='w-[20vw] h-screen fixed left-0 top-0 bg-[#ffffff]'>
                     <h1 className='text-3xl font-mono font-bold text-center py-8'>SocialiZe</h1>
 
                     <div className='w-full h-16 mb-2'>
@@ -123,9 +124,9 @@ const LeftSideBar = () => {
                     </div>
                     <div className='w-full h-16 mb-2'>
                         <div className='relative w-full h-full bg-white flex items-center justify-start'>
-                            <Link to={`/profile/${user?._id}`} className='absolute z-50 w-full h-full flex px-24 items-center justify-between text-xl'>
-                                <img className='w-8 h-8 rounded-full' src={user?.profile_img} alt="" />
-                                <span>{user?.username}</span>
+                            <Link to={`/profile/${user?._id}`} className='absolute z-50 w-full h-full flex px-16 items-center justify-between text-xl'>
+                                <img className='w-10 h-10 rounded-full object-cover' src={user?.profile_img} alt="" />
+                                <span className='text-md'>@{user?.username}</span>
                             </Link>
                             {
                                 location.pathname === `/profile/${user?._id}` && <div className='w-[20vw] h-16 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
@@ -150,7 +151,7 @@ const LeftSideBar = () => {
                 </div>
             </div>
             <Outlet />
-        </>
+        </AnimationWrapper>
     )
 }
 

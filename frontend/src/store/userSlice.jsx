@@ -45,9 +45,12 @@ export const userSlice = createSlice({
         getSuggestedUsers: (state, action) => {
             state.suggestedUsers = action.payload;
         },
+        editUser: (state, action) => {
+            state.user = action.payload;
+        },
     },
 })
 
-export const { signup, verifyOTP, checkUserAuth, passwordReset, logout, getUserProfile, getSuggestedUsers } = userSlice.actions
+export const { signup, verifyOTP, checkUserAuth, passwordReset, logout, getUserProfile, getSuggestedUsers, editUser } = userSlice.actions
 
 export default userSlice.reducer

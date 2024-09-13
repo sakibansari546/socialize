@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 import Feed from '../components/feed.component'
@@ -10,8 +10,11 @@ const Home = () => {
     const dispatch = useDispatch();
     const { user, isAuthenticated, suggestedUsers } = useSelector(state => state.user);
 
+    const [loading, setLoading] = useState(false)
+
     const getSuggestedUsersAsync = async () => {
         try {
+            setLoading(true);
             const res = await axios.get("http://localhost:3000/api/user/suggested-users", {
                 withCredentials: true, // This ensures cookies are sent
             });
@@ -22,6 +25,8 @@ const Home = () => {
             }
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -35,7 +40,7 @@ const Home = () => {
         <>
             <div className='flex '>
                 <Feed />
-                <SuggestedUser />
+                <SuggestedUser loading={loading} suggestedUsers={suggestedUsers} />
             </div>
         </>
     );
