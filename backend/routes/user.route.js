@@ -1,7 +1,8 @@
 import { Router } from 'express';
 
-import { checkAuth, forgotPassword, getSuggestedUsers, getUserProfile, logout, resetPassword, signin, signup, verifyEmail } from '../controllers/user.controller.js';
+import { checkAuth, editProfile, forgotPassword, getSuggestedUsers, getUserProfile, logout, resetPassword, signin, signup, verifyEmail } from '../controllers/user.controller.js';
 import { verifyJWT } from '../middlerwares/verifyJWT.js';
+import { imageUpload } from '../middlerwares/imageUpload.js';
 
 const router = Router();
 
@@ -19,6 +20,8 @@ router.post('/reset-password/:token', resetPassword)
 
 router.post('/user-profile/:userId', verifyJWT, getUserProfile)
 router.get('/suggested-users', verifyJWT, getSuggestedUsers)
+
+router.post('/edit-profile', verifyJWT, imageUpload.single('profileImage'), editProfile)
 
 
 export default router

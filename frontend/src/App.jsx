@@ -5,16 +5,15 @@ import { Toaster } from 'sonner'
 import axios from 'axios';
 
 
+import Home from './pages/home.page';
 import AuthForm from './pages/auth-form.page';
 import VerifyEmail from './pages/verify-email';
 import VerifyResetEmail from './pages/forgot-passowrd/forgot-password.page';
 import CheckEmailForPassword from './pages/forgot-passowrd/check-email-reset-pass.page';
 import ResetPassword from './pages/forgot-passowrd/reset-password.page';
-import Home from './pages/home.page';
 import { checkUserAuth } from './store/userSlice';
 import LeftSideBar from './components/left-sidebar-component';
 import ProfilePage from './pages/profile.page';
-import EditProfile from './pages/edit-profile.page';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading, isCheckingAuth } = useSelector(state => state.user);
@@ -74,7 +73,6 @@ function App() {
           {/* Home route protected by ProtectedRoute */}
           <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path='/profile/:userId' element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-          <Route path='/edit-profile/:userId' element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
         </Route>
       </Routes>
     </>

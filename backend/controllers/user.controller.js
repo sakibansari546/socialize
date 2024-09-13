@@ -4,6 +4,8 @@ import crypto from 'crypto';
 import User from '../models/user.model.js';
 import { genrateTokenAndSetCookie } from '../utils/genrateTokenAndSetCookie.js';
 import { sendPasswordResetEmail, sendVerificationEmail, sendWelcomeEmail } from '../nodemailer/emails.js';
+import { getDataURI } from '../utils/dataURI.js';
+import cloudinary from '../utils/cloudinary.js'
 
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
 const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
@@ -270,3 +272,42 @@ export const getSuggestedUsers = async (req, res) => {
         res.status(500).json({ success: false, message: "Something went wrong" });
     }
 }
+
+export const editProfile = async (req, res) => {
+    const { fullname, bio, username } = req.body;
+    const profileImage = req.file;
+
+    try {
+        const user = await User.findById(req.userId).select('-password');
+        if (!user) return res.status(400).json({ message: "User not found", success: false });
+
+        const normalizedUsername = username.replace(/\s+/g, '').toLowerCase();
+
+        // Check if the username is already taken by another user
+        const isUsername = await User.findOne({ username: normalizedUsername });
+        if (isUsername && isUsername._id.toString() !== user._id.toString()) {
+            return res.status(400).json({ message: "Username already taken", success: false });
+        }
+
+        user.username = normalizedUsername;
+        if (fullname) user.fullname = fullname;
+        if (bio) user.bio = bio;
+
+        // Handle profile image upload
+        if (profileImage) {
+            const fileURI = getDataURI(profileImage);
+            const cloudRes = await cloudinary.uploader.upload(fileURI, { resource_type: "image" });
+            user.profile_img = cloudRes.secure_url;
+        }
+
+        await user.save();
+        res.status(200).json({ success: true, message: "Profile updated successfully", user });
+    } catch (error) {
+        console.error(error);
+
+        if (error.code === 11000 || error.keyPattern?.username) {
+            return res.status(400).json({ message: "Username already exists", success: false });
+        }
+        res.status(500).json({ success: false, message: "Something went wrong" });
+    }
+};
