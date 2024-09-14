@@ -8,7 +8,7 @@ const SuggestedUser = ({ loading, setLoading }) => {
 
     return (
         <AnimationWrapper>
-            <div className='ml-4 w-[29vw] h-screen fixed top-0 right-0 bg-[#efefef] flex flex-col gap-3 items-center py-10'>
+            <div className='ml-4 w-[29vw] h-screen absolute top-0 right-0 bg-[#efefef] flex flex-col gap-3 items-center py-10'>
                 <div className='relative'>
                     <div className='relative z-30 w-[20vw] h-16 bg-white flex items-center justify-between px-3'>
                         <Link to={`/profile/${user._id}`} className='flex items-center gap-2'>

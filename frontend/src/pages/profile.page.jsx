@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 
 import { Link, useParams } from 'react-router-dom';
 import { editUser, getUserProfile } from '../store/userSlice';
@@ -37,6 +37,7 @@ const ProfilePage = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isFollowing, setIsFollowing] = useState(user?.following.includes(userId))
 
     // Handle image change
     const handleImageChange = () => {
@@ -83,13 +84,40 @@ const ProfilePage = () => {
         }
     }
 
+
+    const handleFollowOrUnfollow = async () => {
+        try {
+            setLoading(true);
+            const res = await axios.post(`http://localhost:3000/api/user/follow-unfollow/${userId}`, {}, { withCredentials: true });
+            if (res.data.success) {
+                // Update the local state to reflect follow/unfollow action
+                setIsFollowing((prev) => !prev);
+
+                // Update the followers list locally
+                const updatedFollowers = isFollowing
+                    ? userProfile.followers.filter(id => id !== user._id.toString()) // Remove follower on unfollow
+                    : [...userProfile.followers, user._id]; // Add follower on follow
+                dispatch(getUserProfile({ ...userProfile, followers: updatedFollowers }));
+            } else {
+                toast.error(res.data.message || 'Something went wrong!');
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response?.data?.message || 'An error occurred.');
+        } finally {
+            setLoading(false);
+        }
+    }
+
+
     useEffect(() => {
         document.title = 'Profile'
         const getUserProfileAsync = async () => {
             try {
                 const res = await axios.post(`http://localhost:3000/api/user/user-profile/${userId}`, {}, { withCredentials: true });
                 if (res.data.success) {
-                    dispatch(getUserProfile(res.data.user))
+                    dispatch(getUserProfile(res.data.user));
+                    setIsFollowing(res.data.user.followers.includes(user._id));
                 }
             } catch (error) {
                 console.log(error.response.data);
@@ -106,15 +134,15 @@ const ProfilePage = () => {
                     <AnimationWrapper>
                         <div className="flex flex-col md:flex-row items-center md:items-center gap-12 mb-3">
                             <Avatar className="w-32 h-32 md:w-40 md:h-40">
-                                <AvatarImage className='object-cover' src={userProfile.profile_img} alt="Profile picture" />
+                                <AvatarImage className='object-cover' src={userProfile?.profile_img} alt="Profile picture" />
                                 <AvatarFallback>JD</AvatarFallback>
                             </Avatar>
                             <div className="flex-1 text-center md:text-left">
                                 <div className="flex flex-col md:flex-row justify-start gap-10 items-center mb-4">
-                                    <h1 className="text-2xl font-bold mb-2 md:mb-0">@{userProfile.username}</h1>
+                                    <h1 className="text-2xl font-bold mb-2 md:mb-0">@{userProfile?.username}</h1>
                                     <div className="space-x-2">
                                         {
-                                            userProfile._id === user._id && (
+                                            userProfile?._id === user?._id && (
                                                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                                                     <DialogTrigger asChild>
                                                         <Button onClick={() => setIsDialogOpen(true)} variant="outline">Edit Profile</Button>
@@ -180,18 +208,21 @@ const ProfilePage = () => {
                                                 </Dialog>
                                             )
                                         }
-                                        <Button>Follow</Button>
+                                        {
+                                            user?._id == userProfile?._id ? "" :
+                                                isFollowing ? <Button onClick={handleFollowOrUnfollow} variant='outline'>Unfollow</Button> : <Button onClick={handleFollowOrUnfollow} >Follow</Button>
+                                        }
                                         <Button variant="outline">Message</Button>
                                     </div>
                                 </div>
                                 <div className="flex justify-center md:justify-start space-x-4 text-lg pb-3">
-                                    <span><strong>{userProfile.posts.length}</strong> posts</span>
-                                    <span><strong>{userProfile.followers.length}</strong> followers</span>
-                                    <span><strong>{userProfile.following.length}</strong> following</span>
+                                    <span><strong>{userProfile?.posts?.length}</strong> posts</span>
+                                    <span><strong>{userProfile?.followers?.length}</strong> followers</span>
+                                    <span><strong>{userProfile?.following?.length}</strong> following</span>
                                 </div>
-                                <h2 className="text-xl font-semibold mb-2">{userProfile.fullname}</h2>
+                                <h2 className="text-xl font-semibold mb-2">{userProfile?.fullname}</h2>
                                 <p className="text-muted-foreground mb-4 w-[25vw]">
-                                    {userProfile.bio.split('\n').map((line, index) => (
+                                    {userProfile?.bio?.split('\n').map((line, index) => (
                                         <React.Fragment key={index}>
                                             {line}
                                             <br />
