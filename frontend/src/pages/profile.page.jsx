@@ -24,6 +24,7 @@ import InputBox from '../components/input.conponent';
 import BtnLoader from '../components/btn-loader.components';
 import { toast } from 'sonner';
 import AnimationWrapper from '../common/AnimationWrapper';
+import FollowersFollowingDialog from '../components/FollowersFollowingDialog';
 
 const ProfilePage = () => {
     const dispatch = useDispatch();
@@ -83,6 +84,21 @@ const ProfilePage = () => {
         } finally {
             setLoading(false);
         }
+    }
+    const [followDialog, setFollowDialog] = useState(false)
+    const [dialogTitle, setDialogTitle] = useState('');
+    const [dialogUserList, setDialogUserList] = useState([]);
+
+    const handleFollowersClick = () => {
+        setDialogTitle('Followers');
+        setDialogUserList(userProfile.followers); // Use the followers list
+        setFollowDialog(true);
+    }
+
+    const handleFollowingClick = () => {
+        setDialogTitle('Following');
+        setDialogUserList(userProfile.following); // Use the following list
+        setFollowDialog(true);
     }
 
 
@@ -215,9 +231,20 @@ const ProfilePage = () => {
                                 </div>
                                 <div className="flex justify-center md:justify-start space-x-4 text-sm sm:text-base md:text-lg pb-3">
                                     <span><strong>{userProfile?.posts?.length}</strong> posts</span>
-                                    <span><strong>{userProfile?.followers?.length}</strong> followers</span>
-                                    <span><strong>{userProfile?.following?.length}</strong> following</span>
+                                    <span onClick={handleFollowersClick} className="cursor-pointer">
+                                        <strong>{userProfile?.followers?.length}</strong> followers
+                                    </span>
+                                    <span onClick={handleFollowingClick} className="cursor-pointer">
+                                        <strong>{userProfile?.following?.length}</strong> following
+                                    </span>
                                 </div>
+                                {/* Dialog Component */}
+                                <FollowersFollowingDialog
+                                    isOpen={followDialog}
+                                    onOpenChange={setFollowDialog}
+                                    title={dialogTitle}
+                                    userList={dialogUserList}
+                                />
                                 <h2 className="text-base sm:text-lg md:text-xl font-semibold mb-2">{userProfile?.fullname}</h2>
                                 <p className="text-muted-foreground text-sm sm:text-base md:text-lg mb-4 lg:w-[25vw]">
                                     {userProfile?.bio?.split('\n').map((line, index) => (
