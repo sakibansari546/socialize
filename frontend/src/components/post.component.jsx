@@ -44,7 +44,7 @@ const Post = () => {
                 <div className='flex items-center gap-3'>
                     <img className='w-8 h-8 sm:w-6 sm:h-6 rounded-full' src="https://xsgames.co/randomusers/avatar.php?g=female" alt="" />
                     <input className='w-full outline-none sm:text-sm' type="text" placeholder='Add a comment...' />
-                    <button className='text-xl sm:text-lg font-bold'>Post</button>
+                    <button className='sm:text-xl text-lg font-bold'>Post</button>
                 </div>
             </div>
 

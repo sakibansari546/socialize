@@ -165,14 +165,17 @@ const LeftSideBar = () => {
                 <Link to={'/search'} className='w-16 h-full flex flex-col items-center justify-center'>
                     <i className='fi fi-bs-search'></i>
                 </Link>
-                <Link to={'/create'} className='w-16 h-full flex flex-col items-center justify-center'>
-                    <i className='fi fi-rr-square-plus'></i>
-                </Link>
                 <Link to={'/explore'} className='w-16 h-full flex flex-col items-center justify-center'>
                     <i className='fi fi-br-arrow-trend-up'></i>
                 </Link>
+                <Link to={'/create'} className='w-16 h-full flex flex-col items-center justify-center'>
+                    <i className='fi fi-rr-square-plus'></i>
+                </Link>
                 <Link to={'/message'} className='w-16 h-full flex flex-col items-center justify-center'>
-                    <i className='fi fi-rr-comment-alt-dots '></i>
+                    <i className='fi fi-rr-comment-alt-dots'></i>
+                </Link>
+                <Link to={'/notification'} className='w-16 h-full flex flex-col items-center justify-center'>
+                    <i className='fi fi-rr-bell '></i>
                 </Link>
                 <Link to={`/profile/${user?._id}`} className='w-16 h-full flex flex-col items-center justify-center'>
                     <img className='w-8 h-8 rounded-full object-cover' src={user?.profile_img} alt="" />
