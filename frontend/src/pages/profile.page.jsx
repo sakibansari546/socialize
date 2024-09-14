@@ -89,16 +89,36 @@ const ProfilePage = () => {
     const [dialogTitle, setDialogTitle] = useState('');
     const [dialogUserList, setDialogUserList] = useState([]);
 
+    const fetchFloowingFollowerList = async (type) => {
+        try {
+            setLoading(true)
+            const res = await axios.post(`http://localhost:3000/api/user/followers-following-list/${userId}`, {}, { withCredentials: true });
+            if (res.data.success) {
+                if (type === 'Followers') {
+                    setDialogUserList(res.data.followers);
+                } else if (type === 'Following') {
+                    setDialogUserList(res.data.following);
+                }
+            } else {
+                console.log(res.data.message);
+            }
+        } catch (error) {
+            console.log(error.response?.data?.message || 'An error occurred.');
+        } finally {
+            setLoading(false)
+        }
+    }
+
     const handleFollowersClick = () => {
-        setDialogTitle('Followers');
-        setDialogUserList(userProfile.followers); // Use the followers list
+        fetchFloowingFollowerList('Followers');
         setFollowDialog(true);
+        setDialogTitle('Followers');
     }
 
     const handleFollowingClick = () => {
-        setDialogTitle('Following');
-        setDialogUserList(userProfile.following); // Use the following list
+        fetchFloowingFollowerList('Following');
         setFollowDialog(true);
+        setDialogTitle('Following');
     }
 
 
@@ -141,7 +161,7 @@ const ProfilePage = () => {
             }
         }
         getUserProfileAsync();
-    }, [userId, dispatch])
+    }, [userId, dispatch, user._id])
 
 
     return (
@@ -244,6 +264,7 @@ const ProfilePage = () => {
                                     onOpenChange={setFollowDialog}
                                     title={dialogTitle}
                                     userList={dialogUserList}
+                                    loading={loading}
                                 />
                                 <h2 className="text-base sm:text-lg md:text-xl font-semibold mb-2">{userProfile?.fullname}</h2>
                                 <p className="text-muted-foreground text-sm sm:text-base md:text-lg mb-4 lg:w-[25vw]">
@@ -265,15 +286,27 @@ const ProfilePage = () => {
 
                     <div className="mt-6 grid grid-cols-3 gap-1 md:gap-4">
                         {[...Array(9)].map((_, i) => (
-                            <Card key={i} className="aspect-square">
-                                <CardContent className="p-0">
-                                    <img
-                                        src={`https://xsgames.co/randomusers/avatar.php?g=female`}
-                                        alt={`Post ${i + 1}`}
-                                        className="w-full h-full object-cover"
-                                    />
-                                </CardContent>
-                            </Card>
+                            <>
+                                <Card key={i} className="aspect-square relative group cursor-pointer">
+                                    <CardContent className="p-0">
+                                        <img
+                                            src={`https://xsgames.co/randomusers/avatar.php?g=female`}
+                                            alt={`Post ${i + 1}`}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </CardContent>
+                                    <div className='w-full h-full absolute top-0 left-0 bg-black bg-opacity-70 opacity-0 group-hover:opacity-70 transition-opacity duration-300 flex items-center justify-center gap-7 text-white z-30'>
+                                        <div className='flex items-center gap-2 text-xl'>
+                                            <i class="fi fi-ss-heart"></i>
+                                            <p className='texl-2xl mb-1'>0</p>
+                                        </div>
+                                        <div className='flex items-center gap-2 text-xl'>
+                                            <i class="fi fi-ss-comment-dots"></i>
+                                            <p className='texl-2xl mb-1'>0</p>
+                                        </div>
+                                    </div>
+                                </Card>
+                            </>
                         ))}
                     </div>
                 </div>
