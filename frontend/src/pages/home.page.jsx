@@ -10,7 +10,8 @@ const Home = () => {
     const dispatch = useDispatch();
     const { user, isAuthenticated, suggestedUsers } = useSelector(state => state.user);
 
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const [tabActive, setTabActive] = useState("home");
 
     const getSuggestedUsersAsync = async () => {
         try {
@@ -38,10 +39,18 @@ const Home = () => {
 
     return (
         <>
-            <div className='flex '>
-                <Feed />
-                <SuggestedUser loading={loading} suggestedUsers={suggestedUsers} />
-            </div>
+            <div className='w-screen flex flex-col -z-30'>
+                <div className={`lg:hidden flex items-center justify-center gap-8 py-5 sticky top-0 z-50 bg-white font-mono`}>
+                    <button className={`${tabActive == 'home' ? "font-bold underline" : ""}`} onClick={() => setTabActive("home")}>Home</button>
+                    <button className={`${tabActive == 'users' ? "font-bold underline" : ""}`} onClick={() => setTabActive("users")}>Users</button>
+                </div>
+
+                <Feed tabActive={tabActive} />
+                <SuggestedUser tabActive={tabActive} loading={loading} suggestedUsers={suggestedUsers} />
+
+
+                <Outlet />
+            </div >
         </>
     );
 }

@@ -19,6 +19,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 import InputBox from '../components/input.conponent';
 import BtnLoader from '../components/btn-loader.components';
 import { toast } from 'sonner';
@@ -129,26 +130,26 @@ const ProfilePage = () => {
 
     return (
         <>
-            <div className='ml-[20.5vw] w-[78.vw] h-full bg-[#efefef] flex flex-col items-center justify-center py-6 gap-7'>
+            <div className='lg:ml-[20.5vw] w-[78.vw] h-full bg-[#efefef] flex flex-col items-center justify-center py-6 gap-7'>
                 <div className="w-full flex flex-col items-center py-10">
                     <AnimationWrapper>
-                        <div className="flex flex-col md:flex-row items-center md:items-center gap-12 mb-3">
-                            <Avatar className="w-32 h-32 md:w-40 md:h-40">
+                        <div className="flex flex-col md:flex-row items-center md:items-center lg:gap-12 mb-3">
+                            <Avatar className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-40 lg:h-40">
                                 <AvatarImage className='object-cover' src={userProfile?.profile_img} alt="Profile picture" />
                                 <AvatarFallback>JD</AvatarFallback>
                             </Avatar>
                             <div className="flex-1 text-center md:text-left">
-                                <div className="flex flex-col md:flex-row justify-start gap-10 items-center mb-4">
-                                    <h1 className="text-2xl font-bold mb-2 md:mb-0">@{userProfile?.username}</h1>
+                                <div className="flex flex-col md:flex-row justify-start lg:gap-10 items-center mb-4 my-4">
+                                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 md:mb-0">@{userProfile?.username}</h1>
                                     <div className="space-x-2">
-                                        {
-                                            userProfile?._id === user?._id && (
-                                                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                                                    <DialogTrigger asChild>
-                                                        <Button onClick={() => setIsDialogOpen(true)} variant="outline">Edit Profile</Button>
-                                                    </DialogTrigger>
-
-                                                    <DialogContent className="w-[70vw] flex items-center flex-col">
+                                        {userProfile?._id === user?._id && (
+                                            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                                                <DialogTrigger asChild>
+                                                    <Button onClick={() => setIsDialogOpen(true)} variant="outline">Edit Profile</Button>
+                                                </DialogTrigger>
+                                                <DialogContent className="w-[90vw] sm:w-[70vw] flex items-center flex-col">
+                                                    {/* Edit Profile form code */}
+                                                    <DialogContent className="w-[90vw] sm:w-[70vw] flex items-center flex-col">
                                                         <DialogHeader>
                                                             <DialogTitle>Edit profile</DialogTitle>
                                                             <DialogDescription>
@@ -156,37 +157,34 @@ const ProfilePage = () => {
                                                             </DialogDescription>
                                                         </DialogHeader>
                                                         <form onSubmit={handleSubmit(handleFormSubmit)} >
-                                                            <div className="grid gap-4 py-4 ">
+                                                            <div className="grid gap-4 py-4">
                                                                 <div className=''>
                                                                     <input ref={inputRef} onChange={handleFileInput} type="file" hidden />
-                                                                    <div className='relative w- flex items-center justify-center'>
+                                                                    <div className='relative flex items-center justify-center'>
                                                                         <img className='w-20 h-20 rounded-full object-cover' src={imageFile ? URL.createObjectURL(imageFile) : userProfile.profile_img} alt="" />
-                                                                        <button type='button' onClick={handleImageChange} className='w-6 h-6 bg-black rounded-full absolute bottom-1 right-[10vw]'><i className="fi fi-rc-pencil text-white text-lg"></i>
+                                                                        <button type='button' onClick={handleImageChange} className='w-6 h-6 bg-gray-500 rounded-full absolute lg:bottom-1 lg:right-[10vw] bottom-0 right-[33.5vw]'>
+                                                                            <i className="fi fi-rc-pencil text-white text-lg"></i>
                                                                         </button>
                                                                     </div>
                                                                 </div>
                                                                 <div className="">
-                                                                    <InputBox type='text' {...register("username")} defaultValue={userProfile.username} placeholder='username...' />
+                                                                    <Input type='text' {...register("username")} defaultValue={userProfile.username} placeholder='username...' />
                                                                 </div>
                                                                 <div className="">
-                                                                    <InputBox type='text' {...register("fullname")} defaultValue={userProfile.fullname} placeholder='Fullname...' />
+                                                                    <Input type='text' {...register("fullname")} defaultValue={userProfile.fullname} placeholder='Fullname...' />
                                                                 </div>
                                                                 <div className="">
-                                                                    <div className='relative w-[75vw] sm:w-[40vw] md:w-[40vw] lg:w-[25vw] h-17'>
+                                                                    <div className='relative w-[90vw] sm:w-[40vw] md:w-[40vw] lg:w-[25vw] h-17'>
                                                                         <div className='relative w-full h-full'>
                                                                             <textarea
                                                                                 {...register("bio")}
                                                                                 defaultValue={userProfile.bio}
-                                                                                className='w-full h-full px-4 pl-12 outline-none font-mono font-semibold text-lg relative z-20'
+                                                                                className='w-full h-full px-4 relative z-20 border'
                                                                                 placeholder='Bio...'
                                                                                 onFocus={() => setIsFocus(true)}
                                                                                 onBlurCapture={() => setIsFocus(false)}
                                                                             ></textarea>
                                                                         </div>
-
-                                                                        <div
-                                                                            className={`absolute  ${isFocus ? '-top-0 left-0' : 'top-2 left-2'}   z-10 bg-black w-full h-full transition-all duration-300`}
-                                                                        ></div>
                                                                     </div>
                                                                 </div>
                                                                 {/* Error */}
@@ -195,7 +193,8 @@ const ProfilePage = () => {
                                                             <DialogFooter>
                                                                 <button
                                                                     type='submit'
-                                                                    className='relative cursor-pointer z-10 w-[70vw] sm:w-[40vw] md:w-[40vw] lg:w-[25vw] h-10 flex items-center justify-center bg-white font-mono font-semibold text-lg rounded-md border-2 border-black disabled:cursor-not-allowed disabled:bg-[#efefef]'
+                                                                    disabled={loading}
+                                                                    className='relative cursor-pointer z-10 w-[90vw] sm:w-[40vw] md:w-[40vw] lg:w-[25vw] h-10 flex items-center justify-center bg-white font-mono font-semibold text-lg rounded-md border-2 border-black disabled:cursor-not-allowed disabled:bg-[#efefef]'
                                                                 >
                                                                     {
                                                                         loading ? <BtnLoader /> : 'Save changes'
@@ -203,25 +202,24 @@ const ProfilePage = () => {
                                                                 </button>
                                                             </DialogFooter>
                                                         </form>
-
                                                     </DialogContent>
-                                                </Dialog>
-                                            )
-                                        }
+                                                </DialogContent>
+                                            </Dialog>
+                                        )}
                                         {
-                                            user?._id == userProfile?._id ? "" :
-                                                isFollowing ? <Button onClick={handleFollowOrUnfollow} variant='outline'>Unfollow</Button> : <Button onClick={handleFollowOrUnfollow} >Follow</Button>
+                                            user?._id === userProfile?._id ? "" :
+                                                isFollowing ? <Button onClick={handleFollowOrUnfollow} variant='outline'>Unfollow</Button> : <Button onClick={handleFollowOrUnfollow}   >Follow</Button>
                                         }
                                         <Button variant="outline">Message</Button>
                                     </div>
                                 </div>
-                                <div className="flex justify-center md:justify-start space-x-4 text-lg pb-3">
+                                <div className="flex justify-center md:justify-start space-x-4 text-sm sm:text-base md:text-lg pb-3">
                                     <span><strong>{userProfile?.posts?.length}</strong> posts</span>
                                     <span><strong>{userProfile?.followers?.length}</strong> followers</span>
                                     <span><strong>{userProfile?.following?.length}</strong> following</span>
                                 </div>
-                                <h2 className="text-xl font-semibold mb-2">{userProfile?.fullname}</h2>
-                                <p className="text-muted-foreground mb-4 w-[25vw]">
+                                <h2 className="text-base sm:text-lg md:text-xl font-semibold mb-2">{userProfile?.fullname}</h2>
+                                <p className="text-muted-foreground text-sm sm:text-base md:text-lg mb-4 lg:w-[25vw]">
                                     {userProfile?.bio?.split('\n').map((line, index) => (
                                         <React.Fragment key={index}>
                                             {line}
@@ -234,8 +232,8 @@ const ProfilePage = () => {
                     </AnimationWrapper>
 
                     <div className='w-full mt-8 pt-3 flex items-center justify-center gap-24 border-t border-gray-300'>
-                        <button className='text-xl font-bold font-mono underline'>Posts</button>
-                        <button className='text-xl font- font-mono'>Saved</button>
+                        <button className='text-lg sm:text-xl font-bold font-mono underline'>Posts</button>
+                        <button className='text-lg sm:text-xl font-mono'>Saved</button>
                     </div>
 
                     <div className="mt-6 grid grid-cols-3 gap-1 md:gap-4">
@@ -253,6 +251,7 @@ const ProfilePage = () => {
                     </div>
                 </div>
             </div>
+
         </>
     )
 }
