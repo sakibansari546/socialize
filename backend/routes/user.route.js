@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { checkAuth, editProfile, followOrUnfollow, forgotPassword, getSuggestedUsers, getUserProfile, logout, resetPassword, signin, signup, verifyEmail } from '../controllers/user.controller.js';
+import { checkAuth, editProfile, followerFollowingList, followOrUnfollow, forgotPassword, getSuggestedUsers, getUserProfile, logout, resetPassword, signin, signup, verifyEmail } from '../controllers/user.controller.js';
 import { verifyJWT } from '../middlerwares/verifyJWT.js';
 import { imageUpload } from '../middlerwares/imageUpload.js';
 
@@ -23,7 +23,9 @@ router.get('/suggested-users', verifyJWT, getSuggestedUsers)
 
 router.post('/edit-profile', verifyJWT, imageUpload.single('profileImage'), editProfile);
 
-router.post('/follow-unfollow/:userId', verifyJWT, followOrUnfollow)
+router.post('/follow-unfollow/:userId', verifyJWT, followOrUnfollow);
+
+router.post('/followers-following-list/:userId', followerFollowingList)
 
 
 export default router

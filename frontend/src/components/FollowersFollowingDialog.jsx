@@ -4,7 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 
 const FollowersFollowingDialog = ({ isOpen, onOpenChange, title, userList }) => {
-    console.log(userList);
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange} className='mx-4'>

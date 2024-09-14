@@ -346,3 +346,22 @@ export const followOrUnfollow = async (req, res) => {
         res.status(500).json({ success: false, message: "Something went wrong" });
     }
 }
+
+export const followerFollowingList = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const user = await User.findById(userId).select("-password -__v");
+        if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+        // Fetch followers
+        const followers = await User.find({ _id: { $in: user.followers } }).select("-password -__v");
+
+        // Fetch following
+        const following = await User.find({ _id: { $in: user.following } }).select("-password -__v");
+
+        res.status(200).json({ success: true, followers, following });
+    } catch (error) {
+        console.error(error); // Log the error for debugging
+        res.status(500).json({ success: false, message: "Something went wrong" });
+    }
+}
