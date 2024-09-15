@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 // import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
@@ -8,6 +8,7 @@ import axios from 'axios'
 import { logout } from '../store/userSlice'
 import { toast } from 'sonner'
 import AnimationWrapper from '../common/AnimationWrapper'
+import { CreatePostDialogComponent } from './create-post-dialog'
 const sidebarItems = [
     { icon: 'fi-rs-house-chimney', text: 'Home' },
     { icon: 'fi-bs-search', text: 'Search' },
@@ -23,6 +24,8 @@ const LeftSideBar = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const { user } = useSelector(state => state.user);
+
+    const [postDialog, setPostDialog] = useState(false)
 
     const handleLogout = async () => {
         try {
@@ -89,12 +92,12 @@ const LeftSideBar = () => {
 
                     <div className='w-full h-16 mb-2'>
                         <div className='relative w-full h-full bg-white hover:bg-[#efefef] transition-all duration-300 flex items-center justify-start'>
-                            <Link to={'/create'} className='absolute z-50 w-full h-full flex px-20 items-center justify-between text-xl'>
+                            <button onClick={() => setPostDialog(true)} className='absolute z-50 w-full h-full flex px-20 items-center justify-between text-xl'>
                                 <span className='md:hidden lg:flex'>Create</span>
                                 <div>
                                     <i className='fi fi-rr-square-plus mt-1'></i>
                                 </div>
-                            </Link>
+                            </button>
                             {location.pathname === '/create' && (
                                 <div className='w-[20vw] h-16 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
                             )}
@@ -157,6 +160,8 @@ const LeftSideBar = () => {
                 </div>
             </div>
 
+            <CreatePostDialogComponent open={postDialog} onOpenChange={setPostDialog} />
+
             {/* Bottom navigation for medium and small screens */}
             <div className='lg:hidden fixed bottom-0 left-0 w-full h-16 bg-white flex justify-around items-center shadow-md z-50'>
                 <Link to={'/'} className='w-16 h-full flex flex-col items-center justify-center'>
@@ -168,9 +173,9 @@ const LeftSideBar = () => {
                 <Link to={'/explore'} className='w-16 h-full flex flex-col items-center justify-center'>
                     <i className='fi fi-br-arrow-trend-up'></i>
                 </Link>
-                <Link to={'/create'} className='w-16 h-full flex flex-col items-center justify-center'>
+                <button onClick={() => setPostDialog(true)} className='w-16 h-full flex flex-col items-center justify-center'>
                     <i className='fi fi-rr-square-plus'></i>
-                </Link>
+                </button>
                 <Link to={'/message'} className='w-16 h-full flex flex-col items-center justify-center'>
                     <i className='fi fi-rr-comment-alt-dots'></i>
                 </Link>

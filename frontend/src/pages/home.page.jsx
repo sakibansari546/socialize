@@ -47,8 +47,6 @@ const Home = () => {
 
                 <Feed tabActive={tabActive} />
                 <SuggestedUser tabActive={tabActive} loading={loading} suggestedUsers={suggestedUsers} />
-
-
                 <Outlet />
             </div >
         </>
