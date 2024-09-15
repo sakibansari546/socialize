@@ -46,25 +46,25 @@ const LeftSideBar = () => {
             {/* Sidebar for large screens */}
             <div>
                 <div className='w-[20vw] h-screen fixed left-0 top-0 bg-[#ffffff] hidden lg:grid'>
-                    <h1 className='text-3xl font-mono font-bold text-center py-8'>SocialiZe</h1>
+                    <h1 className='text-3xl font-mono font-bold text-center pt-8 pb-3'>SocialiZe</h1>
 
-                    <div className='w-full h-16 mb-2'>
+                    <div className='w-full h-12 mb-'>
                         <div className='relative w-full h-full bg-white hover:bg-[#efefef] transition-all duration-300 flex items-center justify-start'>
-                            <Link to={'/'} className='absolute z-50 w-full h-full flex px-20 items-center justify-between text-xl'>
+                            <Link to={'/'} className='absolute z-50 w-full h-full flex px-16 items-center justify-between text-xl'>
                                 <span className='md:hidden lg:flex'>Home</span>
                                 <div>
                                     <i className='fi fi-rs-house-chimney mt-1'></i>
                                 </div>
                             </Link>
                             {location.pathname === '/' && (
-                                <div className='w-full h-16 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
+                                <div className='w-full h-12 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
                             )}
                         </div>
                     </div>
 
-                    <div className='w-full h-16 mb-2'>
+                    <div className='w-full h-12 mb-'>
                         <div className='relative w-full h-full bg-white hover:bg-[#efefef] transition-all duration-300 flex items-center justify-start'>
-                            <Link to={'/search'} className='absolute z-50 w-full h-full flex px-20 items-center justify-between text-xl'>
+                            <Link to={'/search'} className='absolute z-50 w-full h-full flex px-16 items-center justify-between text-xl'>
                                 <span className='md:hidden lg:flex'>Search</span>
                                 <div>
                                     <i className='fi fi-bs-search mt-1'></i>
@@ -76,9 +76,9 @@ const LeftSideBar = () => {
                         </div>
                     </div>
 
-                    <div className='w-full h-16 mb-2'>
+                    <div className='w-full h-12 mb-'>
                         <div className='relative w-full h-full bg-white hover:bg-[#efefef] transition-all duration-300 flex items-center justify-start'>
-                            <Link to={'/explore'} className='absolute z-50 w-full h-full flex px-20 items-center justify-between text-xl'>
+                            <Link to={'/explore'} className='absolute z-50 w-full h-full flex px-16 items-center justify-between text-xl'>
                                 <span className='md:hidden lg:flex'>Explore</span>
                                 <div>
                                     <i className='fi fi-br-arrow-trend-up mt-1'></i>
@@ -90,9 +90,9 @@ const LeftSideBar = () => {
                         </div>
                     </div>
 
-                    <div className='w-full h-16 mb-2'>
+                    <div className='w-full h-12 mb-'>
                         <div className='relative w-full h-full bg-white hover:bg-[#efefef] transition-all duration-300 flex items-center justify-start'>
-                            <button onClick={() => setPostDialog(true)} className='absolute z-50 w-full h-full flex px-20 items-center justify-between text-xl'>
+                            <button onClick={() => setPostDialog(true)} className='absolute z-50 w-full h-full flex px-16 items-center justify-between text-xl'>
                                 <span className='md:hidden lg:flex'>Create</span>
                                 <div>
                                     <i className='fi fi-rr-square-plus mt-1'></i>
@@ -104,9 +104,9 @@ const LeftSideBar = () => {
                         </div>
                     </div>
 
-                    <div className='w-full h-16 mb-2'>
+                    <div className='w-full h-12 mb-'>
                         <div className='relative w-full h-full bg-white hover:bg-[#efefef] transition-all duration-300 flex items-center justify-start'>
-                            <Link to={'/message'} className='absolute z-50 w-full h-full flex px-20 items-center justify-between text-xl'>
+                            <Link to={'/message'} className='absolute z-50 w-full h-full flex px-16 items-center justify-between text-xl'>
                                 <span className='md:hidden lg:flex'>Message</span>
                                 <div>
                                     <i className='fi fi-rr-comment-alt-dots mt-1'></i>
@@ -118,9 +118,9 @@ const LeftSideBar = () => {
                         </div>
                     </div>
 
-                    <div className='w-full h-16 mb-2'>
+                    <div className='w-full h-12 mb-'>
                         <div className='relative w-full h-full bg-white hover:bg-[#efefef] transition-all duration-300 flex items-center justify-start'>
-                            <Link to={'/notification'} className='absolute z-50 w-full h-full flex px-20 items-center justify-between text-xl'>
+                            <Link to={'/notification'} className='absolute z-50 w-full h-full flex px-16 items-center justify-between text-xl'>
                                 <span className='md:hidden lg:flex'>Notification</span>
                                 <div>
                                     <i className='fi fi-rr-bell mt-1'></i>
@@ -132,19 +132,19 @@ const LeftSideBar = () => {
                         </div>
                     </div>
 
-                    <div className='w-full h-16 mb-2'>
+                    <div className='w-full h-12 mb-'>
                         <div className='relative w-full h-full bg-white hover:bg-[#efefef] transition-all duration-300 flex items-center justify-start'>
-                            <Link to={`/profile/${user?._id}`} className='absolute z-50 w-full h-full flex px-16 items-center justify-between text-xl'>
+                            <Link to={`/profile/${user?._id}`} className='absolute z-50 w-full h-full flex px-14 items-center justify-between text-xl'>
                                 <img className='w-10 h-10 rounded-full object-cover' src={user?.profile_img} alt="" />
                                 <span className='text-md'>@{user?.username}</span>
                             </Link>
                             {location.pathname === `/profile/${user?._id}` && (
-                                <div className='w-[20vw] h-16 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
+                                <div className='w-[20vw] h-12 absolute top-2 left-2 transition-all duration-300 bg-black -z-20'></div>
                             )}
                         </div>
                     </div>
 
-                    <div className='w-full h-16 mb-2'>
+                    <div className='w-full h-12 -mb-'>
                         <div className='relative w-full h-full bg-white hover:bg-[#efefef] transition-all duration-300 flex items-center justify-start'>
                             <div className='absolute z-50 w-full h-full flex px-20 items-center justify-between text-xl'>
                                 <span className='md:hidden lg:flex'>Logout</span>
