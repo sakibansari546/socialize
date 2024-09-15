@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -21,7 +23,8 @@ export function CreatePostDialogComponent({ open, onOpenChange }) {
   const [activeTab, setActiveTab] = useState('post');
   const [filePreview, setFilePreview] = useState(null); // State for storing file preview URL
   const [caption, setCaption] = useState('');
-  const [file, setFile] = useState(null);
+  const [postFile, setPostFile] = useState(null);
+  const [reelFile, setReelFile] = useState(null);
 
 
   const handlePostClick = () => {
@@ -39,7 +42,7 @@ export function CreatePostDialogComponent({ open, onOpenChange }) {
       } else {
         const imageUrl = URL.createObjectURL(selectFile); // Create a preview URL for the image
         setFilePreview(imageUrl); // Set the image preview
-        setFile(selectFile);
+        setPostFile(selectFile);
       }
     } else if (activeTab === 'reels') {
       // Reels - Only allow videos and check duration
@@ -51,13 +54,13 @@ export function CreatePostDialogComponent({ open, onOpenChange }) {
         video.preload = 'metadata';
         video.onloadedmetadata = () => {
           window.URL.revokeObjectURL(video.src);
-          if (video.duration > 90) {
-            toast.error('Video must be less than or equal to 1.5 minutes (90 seconds)')
+          if (video.duration > 120) {
+            toast.error('Video must be less than or equal to 2 minutes (120 seconds)')
             inputRef.current.value = ''; // Reset input
           } else {
             const videoUrl = URL.createObjectURL(selectFile); // Create a preview URL for the video
             setFilePreview(videoUrl); // Set the video preview
-            setFile(selectFile);
+            setReelFile(selectFile);
           }
         };
         video.src = URL.createObjectURL(selectFile);
@@ -65,14 +68,22 @@ export function CreatePostDialogComponent({ open, onOpenChange }) {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
     const formData = new FormData();
-    formData.append('file', file);
+    if (postFile) formData.append('postImage', postFile);
+    if (reelFile) formData.append('reelVideo', reelFile);
     formData.append('caption', caption);
-    formData.append('user_id', user._id);
+    // formData.append('user_id', user._id);
     formData.append('type', activeTab);
-    
+
+    try {
+      const res = await axios.post(`http://localhost:3000/api/post/create-${activeTab}`, formData, { withCredentials: true })
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {

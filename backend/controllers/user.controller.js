@@ -301,10 +301,7 @@ export const editProfile = async (req, res) => {
         // Handle profile image upload
         if (profileImage) {
             const fileURI = getDataURI(profileImage);
-            const cloudRes = await cloudinary.uploader.upload(fileURI, {
-                resource_type: "image",
-                folder: "profile_images" // specify the folder name here
-            });
+            const cloudRes = await cloudinary.uploader.upload(fileURI, { resource_type: "image" });
             user.profile_img = cloudRes.secure_url;
         }
 
