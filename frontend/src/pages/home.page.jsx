@@ -10,7 +10,6 @@ const Home = () => {
     const dispatch = useDispatch();
     const { user, isAuthenticated, suggestedUsers } = useSelector(state => state.user);
     const { posts } = useSelector(state => state.post);
-    console.log(posts);
 
 
     const [loading, setLoading] = useState(false);
