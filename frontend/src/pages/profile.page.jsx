@@ -129,7 +129,6 @@ const ProfilePage = () => {
             if (res.data.success) {
                 // Update the local state to reflect follow/unfollow action
                 setIsFollowing((prev) => !prev);
-
                 // Update the followers list locally
                 const updatedFollowers = isFollowing
                     ? userProfile.followers.filter(id => id !== user._id.toString()) // Remove follower on unfollow

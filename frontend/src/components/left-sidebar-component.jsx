@@ -162,6 +162,20 @@ const LeftSideBar = () => {
 
             <CreatePostDialogComponent open={postDialog} onOpenChange={setPostDialog} />
 
+            <div className='lg:hidden flex items-center justify-between py-3 px-6 border-b'>
+                <div>
+                    <h1 className='text-2xl font-mono font-bold text-center'>SocialiZe</h1>
+                </div>
+                <div className='flex items-center text-lg gap-5'>
+                    <Link to={'/message'} className=''>
+                        <i className='fi fi-rr-comment-alt-dots'></i>
+                    </Link>
+                    <Link to={'/notification'} className=''>
+                        <i className='fi fi-rr-bell '></i>
+                    </Link>
+                </div>
+            </div>
+
             {/* Bottom navigation for medium and small screens */}
             <div className='lg:hidden fixed bottom-0 left-0 w-full h-16 bg-white flex justify-around items-center shadow-md z-50'>
                 <Link to={'/'} className='w-16 h-full flex flex-col items-center justify-center'>
@@ -176,12 +190,12 @@ const LeftSideBar = () => {
                 <button onClick={() => setPostDialog(true)} className='w-16 h-full flex flex-col items-center justify-center'>
                     <i className='fi fi-rr-square-plus'></i>
                 </button>
-                <Link to={'/message'} className='w-16 h-full flex flex-col items-center justify-center'>
+                {/* <Link to={'/message'} className='w-16 h-full flex flex-col items-center justify-center'>
                     <i className='fi fi-rr-comment-alt-dots'></i>
-                </Link>
-                <Link to={'/notification'} className='w-16 h-full flex flex-col items-center justify-center'>
+                </Link> */}
+                {/* <Link to={'/notification'} className='w-16 h-full flex flex-col items-center justify-center'>
                     <i className='fi fi-rr-bell '></i>
-                </Link>
+                </Link> */}
                 <Link to={`/profile/${user?._id}`} className='w-16 h-full flex flex-col items-center justify-center'>
                     <img className='w-8 h-8 rounded-full object-cover' src={user?.profile_img} alt="" />
                 </Link>
