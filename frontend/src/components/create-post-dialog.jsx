@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import { toast } from 'sonner';
+import { useSelector } from 'react-redux';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -12,8 +14,7 @@ import {
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UploadIcon from '../assets/post.png';
-import { toast } from 'sonner';
-import { useSelector } from 'react-redux';
+import BtnLoader from './btn-loader.components'
 
 export function CreatePostDialogComponent({ open, onOpenChange }) {
   const inputRef = useRef();
@@ -25,6 +26,8 @@ export function CreatePostDialogComponent({ open, onOpenChange }) {
   const [caption, setCaption] = useState('');
   const [postFile, setPostFile] = useState(null);
   const [reelFile, setReelFile] = useState(null);
+
+  const [loading, setLoading] = useState(false);
 
 
   const handlePostClick = () => {
@@ -79,17 +82,30 @@ export function CreatePostDialogComponent({ open, onOpenChange }) {
     formData.append('type', activeTab);
 
     try {
+      setLoading(true)
+      onOpenChange(false);
+      toast.loading("Creating Post...");
       const res = await axios.post(`http://localhost:3000/api/post/create-${activeTab}`, formData, { withCredentials: true })
-      console.log(res.data);
+      if (res.data.success) {
+        toast.success(res.data.message);
+        toast.dismiss();
+        setFilePreview(null);
+        setCaption("");
+        setPostFile(null)
+        setReelFile(null);
+        console.log(res.data);
+      }
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data.message)
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     setCaption("")
     setFilePreview(null);
-  }, [activeTab])
+  }, [activeTab]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -124,9 +140,11 @@ export function CreatePostDialogComponent({ open, onOpenChange }) {
                   accept="image/*" // Only allow images
                   onChange={handleFileChange}
                 />
-                <button type="button" onClick={handlePostClick} className='py-2 px-4 bg-gray-600 rounded-md text-white font-semibold'>
-                  Upload Image
-                </button>
+                {
+                  !loading && <button type="button" onClick={handlePostClick} className='py-2 px-4 bg-gray-600 rounded-md text-white font-semibold'>
+                    Upload Image
+                  </button>
+                }
               </div>
 
               {
@@ -140,7 +158,7 @@ export function CreatePostDialogComponent({ open, onOpenChange }) {
 
               <DialogFooter>
                 {
-                  filePreview && caption && <Button type="submit">Create Reels</Button>
+                  filePreview && caption && <Button type="submit" disabled={loading} >{loading ? <BtnLoader /> : "Create"}</Button>
                 }
               </DialogFooter>
             </form>
@@ -166,9 +184,11 @@ export function CreatePostDialogComponent({ open, onOpenChange }) {
                   accept="video/*" // Only allow videos
                   onChange={handleFileChange}
                 />
-                <button type="button" onClick={handlePostClick} className='py-2 px-4 bg-gray-600 rounded-md text-white font-semibold'>
-                  Upload Video
-                </button>
+                {
+                  !loading && <button type="button" onClick={handlePostClick} className='py-2 px-4 bg-gray-600 rounded-md text-white font-semibold'>
+                    Upload Video
+                  </button>
+                }
               </div>
               {
                 filePreview && (
@@ -180,7 +200,7 @@ export function CreatePostDialogComponent({ open, onOpenChange }) {
               }
               <DialogFooter>
                 {
-                  filePreview && caption && <Button type="submit">Create Reels</Button>
+                  filePreview && caption && <Button type="submit" disabled={loading}>{loading ? <BtnLoader /> : "Create"}</Button>
                 }
               </DialogFooter>
             </form>

@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const postSchema = new mongoose.Schema({
     type: {
         type: String,
-        // required: true
+        required: true
     },
     caption: {
         type: String,
@@ -15,19 +15,19 @@ const postSchema = new mongoose.Schema({
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        // required: true
+        ref: "user",
+        required: true
     },
     likes: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
+            ref: "user"
         }
     ],
     comments: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Comment"
+            ref: "comment"
         }
     ]
 },

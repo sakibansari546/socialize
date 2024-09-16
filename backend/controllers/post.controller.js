@@ -1,5 +1,5 @@
-import Post from '../models/post.model.js'
-import User from '../models/user.model.js'
+import Post from '../models/post.model.js';
+import User from '../models/user.model.js';
 import cloudinary from '../utils/cloudinary.js';
 import { getDataURI } from '../utils/dataURI.js';
 
@@ -29,7 +29,7 @@ export const createPost = async (req, res) => {
             });
             user.posts.push(post._id);
             await Promise.all([user.save(), post.save()]);
-            res.status(200).json({ message: 'Post created successfully', post });
+            res.status(200).json({ success: true, message: 'Post created successfully', post });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -65,10 +65,33 @@ export const createReels = async (req, res) => {
             });
             user.posts.push(reel._id);
             await Promise.all([user.save(), reel.save()]);
-            res.status(200).json({ message: 'Reel created successfully', reel });
+            res.status(200).json({ success: true, message: 'Reel created successfully', reel });
         }
     } catch (error) {
         console.error('Error creating reel:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+export const getAllPosts = async (req, res) => {
+    const { page } = req.query; // Current page number (from frontend)
+    const limit = 5; // Number of posts per page
+    const skip = (page - 1) * limit; // Skip the previous pages' posts
+
+    try {
+        const posts = await Post.find()
+            .skip(skip)
+            .limit(limit)
+            .populate('author', 'username fullname profile_img')
+            .sort({ createdAt: -1 });
+
+        // Check if there are more posts for the next page
+        const totalPosts = await Post.countDocuments();
+        const hasMore = (skip + limit) < totalPosts;
+
+        res.status(200).json({ posts, hasMore });
+    } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
