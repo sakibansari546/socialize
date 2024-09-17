@@ -36,6 +36,11 @@ const Home = () => {
     useEffect(() => {
         if (isAuthenticated) {
             getSuggestedUsersAsync();
+        } else {
+            const localUser = JSON.parse(localStorage.getItem('user'));
+            if (localUser) {
+                dispatch(signup(localUser)); // Redux state ko local storage se update karna
+            }
         }
     }, [isAuthenticated]);
 

@@ -28,7 +28,7 @@ const AuthForm = ({ type }) => {
             const res = await axios.post(`http://localhost:3000/api/user/${type}`, data, { withCredentials: true });
             console.log(res);
             if (res.data.success) {
-                dispatch(signup(res.data.user));
+                dispatch(signup(res.data.user)); // User ko Redux store and local storage dono me save karenge
                 if (type === 'signup') navigate('/verify-email');
                 if (type === 'signin') {
                     navigate('/');
@@ -42,6 +42,7 @@ const AuthForm = ({ type }) => {
             setLoading(false);
         }
     }
+
 
     useEffect(() => {
         if (isAuthenticated) navigate('/');
