@@ -32,7 +32,10 @@ const ProfilePage = () => {
     const inputRef = useRef();
 
     const { user, userProfile } = useSelector(state => state.user);
+    const { posts } = useSelector(state => state.post);
     const { handleSubmit, register, reset } = useForm()
+
+
 
     const [isFocus, setIsFocus] = useState(false);
     const [imageFile, setImageFile] = useState(null);
@@ -284,15 +287,24 @@ const ProfilePage = () => {
                     </div>
 
                     <div className="mt-6 grid grid-cols-3 gap-1 md:gap-4">
-                        {[...Array(9)].map((_, i) => (
-                            <>
-                                <Card key={i} className="aspect-square relative group cursor-pointer">
+                        {userProfile?.posts.map((post, i) => (
+                            post?.author == userProfile?._id &&
+                            <Link to={`/post/${post?._id}`}>
+                                <Card key={i} className="w-full h-full relative group cursor-pointer">
                                     <CardContent className="p-0">
-                                        <img
-                                            src={`https://xsgames.co/randomusers/avatar.php?g=female`}
-                                            alt={`Post ${i + 1}`}
-                                            className="w-full h-full object-cover"
-                                        />
+                                        {
+                                            post?.type == "post" ? <img
+                                                src={post?.post}
+                                                alt={`Post ${i + 1}`}
+                                                className="w-full h-full object-cover"
+                                            /> : <video
+                                                src={post?.post}
+                                                alt={`Post ${i + 1}`}
+                                                className="w-full h-full object-cover"
+                                                onPause={false}
+                                            />
+                                        }
+
                                     </CardContent>
                                     <div className='w-full h-full absolute top-0 left-0 bg-black bg-opacity-70 opacity-0 group-hover:opacity-70 transition-opacity duration-300 flex items-center justify-center gap-7 text-white z-30'>
                                         <div className='flex items-center gap-2 text-xl'>
@@ -305,11 +317,11 @@ const ProfilePage = () => {
                                         </div>
                                     </div>
                                 </Card>
-                            </>
+                            </Link>
                         ))}
                     </div>
                 </div>
-            </div>
+            </div >
 
         </>
     )

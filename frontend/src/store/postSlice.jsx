@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    posts: []
+    posts: [],
+    hasMore: true // To track if more posts are available
 }
 
 export const postSlice = createSlice({
@@ -9,10 +10,14 @@ export const postSlice = createSlice({
     initialState,
     reducers: {
         fetchPosts: (state, action) => {
-            state.posts = action.payload
+            if (action.payload.length === 0) {
+                state.hasMore = false; // No more posts to load
+            } else {
+                state.posts = [...state.posts, ...action.payload]; // Append new posts
+            }
         },
         addPost: (state, action) => {
-            state.posts.unshift(action.payload)
+            state.posts.unshift(action.payload);
         },
     },
 })
