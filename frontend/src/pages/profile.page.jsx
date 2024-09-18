@@ -44,10 +44,6 @@ const ProfilePage = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isFollowing, setIsFollowing] = useState(user?.following.includes(userId))
 
-
-    console.log(userProfile?.saved);
-
-
     // Handle image change
     const handleImageChange = () => {
         inputRef.current.click(); // Opens the file input dialog
@@ -288,7 +284,7 @@ const ProfilePage = () => {
                     <div className='w-full mt-8 pt-3 flex items-center justify-center gap-24 border-t border-gray-300'>
                         <button onClick={() => setPostTab("posts")} className={`text-lg sm:text-xl ${postTab == "posts" && 'font-bold  underline '} font-mono`}>Posts</button>
                         {
-                            user._id == userProfile._id &&
+                            user?._id == userProfile?._id &&
                             <button onClick={() => setPostTab("saved")} className={`text-lg sm:text-xl ${postTab == "saved" && 'font-bold  underline '} font-mono`}>Saved</button>
                         }
                     </div>
@@ -330,7 +326,7 @@ const ProfilePage = () => {
                                 ))}
                             </div> :
 
-                            user._id == userProfile._id &&
+                            user?._id == userProfile?._id &&
 
                             <div className="mt-6 grid grid-cols-3 gap-1 md:gap-4">
                                 {userProfile?.saved.map((post, i) => (

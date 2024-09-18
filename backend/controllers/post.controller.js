@@ -165,3 +165,25 @@ export const saveOrUnsaved = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
+export const trandingPosts = async (req, res) => {
+    const { page } = req.query; // Current page number (from frontend)
+    const limit = 5; // Number of posts per page
+    const skip = (page - 1) * limit; // Skip the previous pages' posts
+
+    try {
+        const posts = await Post.find()
+            .sort({ likes: -1 }) // Sort by the number of likes
+            .skip(skip)
+            .limit(limit)
+            .populate('author', 'username fullname profile_img')
+
+        // Check if there are more posts for the next page
+        const totalPosts = await Post.countDocuments();
+        const hasMore = (skip + limit) < totalPosts;
+
+        res.status(200).json({ posts, hasMore });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}

@@ -1,9 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     posts: [],
+    trandingPosts: [],
     hasMore: true // To track if more posts are available
-}
+};
 
 export const postSlice = createSlice({
     name: 'post',
@@ -24,10 +25,20 @@ export const postSlice = createSlice({
         },
         postSavedOrNot: (state, action) => {
             state.posts = action.payload;
+        },
+        getTrandingPosts: (state, action) => {
+            if (action.payload.length === 0) {
+                state.hasMore = false; // No more trending posts to load
+            } else {
+                state.trandingPosts = [...state.trandingPosts, ...action.payload]; // Append new trending posts
+            }
+        },
+        updateTrandingPosts: (state, action) => {
+            state.trandingPosts = action.payload;
         }
     },
-})
+});
 
-export const { fetchPosts, addPost, likeOrNot, postSavedOrNot } = postSlice.actions
+export const { fetchPosts, addPost, likeOrNot, postSavedOrNot, getTrandingPosts, updateTrandingPosts } = postSlice.actions;
 
-export default postSlice.reducer
+export default postSlice.reducer;

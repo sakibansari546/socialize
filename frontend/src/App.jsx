@@ -14,6 +14,7 @@ import ResetPassword from './pages/forgot-passowrd/reset-password.page';
 import { checkUserAuth } from './store/userSlice';
 import LeftSideBar from './components/left-sidebar-component';
 import ProfilePage from './pages/profile.page';
+import TrandingPosts from './components/tranding.post.component';
 // import SinglePost from './components/single.post.component';
 
 const ProtectedRoute = ({ children }) => {
@@ -75,6 +76,7 @@ function App() {
           <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path='/profile/:userId' element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
           {/* <Route path='/post/:postId' element={<ProtectedRoute><SinglePost /></ProtectedRoute>} /> */}
+          <Route path='/tranding-posts' element={<ProtectedRoute><TrandingPosts /></ProtectedRoute>} />
         </Route>
       </Routes>
     </>

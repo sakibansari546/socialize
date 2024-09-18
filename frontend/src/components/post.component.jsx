@@ -2,14 +2,14 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import AnimationWrapper from '../common/AnimationWrapper';
 import { useDispatch, useSelector } from 'react-redux';
-import { likeOrNot, postSavedOrNot } from '../store/postSlice';
+import { likeOrNot, postSavedOrNot, updateTrandingPosts } from '../store/postSlice';
 import { toast } from 'sonner';
 
 const Post = ({ post }) => {
     const dispatch = useDispatch();
 
     const { user } = useSelector(state => state.user);
-    const { posts } = useSelector(state => state.post);
+    const { posts, trandingPosts } = useSelector(state => state.post);
 
     const videoRef = useRef(null);
     const [isVisible, setIsVisible] = useState(false);
@@ -36,6 +36,8 @@ const Post = ({ post }) => {
 
             // Dispatch to update Redux state immediately
             dispatch(likeOrNot(updatedPosts));
+            // dispatch(postSavedOrNot(updatedPosts));
+            // dispatch(updateTra   ndingPosts(updatedPosts));
 
             // Call API to actually like/unlike on the server
             const res = await axios.post(
@@ -80,6 +82,7 @@ const Post = ({ post }) => {
 
             // Dispatch to update Redux state immediately
             dispatch(postSavedOrNot(updatedPosts));
+            // dispatch(updateTrandingPosts(updatedPosts));
 
             // Call API to actually save/unsave on the server
             const res = await axios.post(

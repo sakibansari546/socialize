@@ -78,7 +78,7 @@ const LeftSideBar = () => {
 
                     <div className='w-full h-12 mb-'>
                         <div className='relative w-full h-full bg-white hover:bg-[#efefef] transition-all duration-300 flex items-center justify-start'>
-                            <Link to={'/explore'} className='absolute z-50 w-full h-full flex px-16 items-center justify-between text-xl'>
+                            <Link to={'/tranding-posts'} className='absolute z-50 w-full h-full flex px-16 items-center justify-between text-xl'>
                                 <span className='md:hidden lg:flex'>Explore</span>
                                 <div>
                                     <i className='fi fi-br-arrow-trend-up mt-1'></i>
@@ -187,7 +187,7 @@ const LeftSideBar = () => {
                 <button onClick={() => setPostDialog(true)} className='w-16 h-full flex flex-col items-center justify-center'>
                     <i className='fi fi-rr-square-plus'></i>
                 </button>
-                <Link to={'/explore'} className='w-16 h-full flex flex-col items-center justify-center'>
+                <Link to={'/tranding-posts'} className='w-16 h-full flex flex-col items-center justify-center'>
                     <i className='fi fi-br-arrow-trend-up'></i>
                 </Link>
                 <Link to={`/profile/${user?._id}`} className='w-16 h-full flex flex-col items-center justify-center'>

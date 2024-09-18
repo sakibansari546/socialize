@@ -1,5 +1,5 @@
 import express from 'express';
-import { createPost, createReels, getAllPosts, likeOrDislike, saveOrUnsaved } from '../controllers/post.controller.js';
+import { createPost, createReels, getAllPosts, likeOrDislike, saveOrUnsaved, trandingPosts } from '../controllers/post.controller.js';
 import { verifyJWT } from '../middlerwares/verifyJWT.js';
 import { imageUpload } from '../middlerwares/imageUpload.js';
 import uploadVideo from '../middlerwares/videoUpload.js';
@@ -14,6 +14,8 @@ router.get("/get-posts", verifyJWT, getAllPosts);
 router.post('/like-dislike/:postId', verifyJWT, likeOrDislike);
 
 router.post('/saved-unsaved/:postId', verifyJWT, saveOrUnsaved);
+
+router.get('/tranding-posts', verifyJWT, trandingPosts);
 
 
 
