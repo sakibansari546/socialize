@@ -33,9 +33,9 @@ const ProfilePage = () => {
 
     const { user, userProfile } = useSelector(state => state.user);
     const { posts } = useSelector(state => state.post);
-    const { handleSubmit, register, reset } = useForm()
+    const { handleSubmit, register, reset } = useForm();
 
-
+    const [postTab, setPostTab] = useState('posts');
 
     const [isFocus, setIsFocus] = useState(false);
     const [imageFile, setImageFile] = useState(null);
@@ -43,6 +43,10 @@ const ProfilePage = () => {
     const [error, setError] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isFollowing, setIsFollowing] = useState(user?.following.includes(userId))
+
+
+    console.log(userProfile?.saved);
+
 
     // Handle image change
     const handleImageChange = () => {
@@ -282,44 +286,87 @@ const ProfilePage = () => {
                     </AnimationWrapper>
 
                     <div className='w-full mt-8 pt-3 flex items-center justify-center gap-24 border-t border-gray-300'>
-                        <button className='text-lg sm:text-xl font-bold font-mono underline'>Posts</button>
-                        <button className='text-lg sm:text-xl font-mono'>Saved</button>
+                        <button onClick={() => setPostTab("posts")} className={`text-lg sm:text-xl ${postTab == "posts" && 'font-bold  underline '} font-mono`}>Posts</button>
+                        {
+                            user._id == userProfile._id &&
+                            <button onClick={() => setPostTab("saved")} className={`text-lg sm:text-xl ${postTab == "saved" && 'font-bold  underline '} font-mono`}>Saved</button>
+                        }
                     </div>
 
-                    <div className="mt-6 grid grid-cols-3 gap-1 md:gap-4">
-                        {userProfile?.posts.map((post, i) => (
-                            post?.author == userProfile?._id &&
-                            <Link to={`/post/${post?._id}`}>
-                                <Card key={i} className="w-full h-full relative group cursor-pointer">
-                                    <CardContent className="p-0">
-                                        {
-                                            post?.type == "post" ? <img
-                                                src={post?.post}
-                                                alt={`Post ${i + 1}`}
-                                                className="w-full h-full object-cover"
-                                            /> : <video
-                                                src={post?.post}
-                                                alt={`Post ${i + 1}`}
-                                                className="w-full h-full object-cover"
-                                                onPause={false}
-                                            />
-                                        }
+                    {
+                        postTab == 'posts' ?
+                            <div className="mt-6 grid grid-cols-3 gap-1 md:gap-4">
+                                {userProfile?.posts.map((post, i) => (
+                                    post?.author == userProfile?._id &&
+                                    <Link>
+                                        <Card key={i} className="w-full h-full relative group cursor-pointer">
+                                            <CardContent className="p-0">
+                                                {
+                                                    post?.type == "post" ? <img
+                                                        src={post?.post}
+                                                        alt={`Post ${i + 1}`}
+                                                        className="w-full h-full object-cover"
+                                                    /> : <video
+                                                        src={post?.post}
+                                                        alt={`Post ${i + 1}`}
+                                                        className="w-full h-full object-cover"
+                                                        onPause={false}
+                                                    />
+                                                }
 
-                                    </CardContent>
-                                    <div className='w-full h-full absolute top-0 left-0 bg-black bg-opacity-70 opacity-0 group-hover:opacity-70 transition-opacity duration-300 flex items-center justify-center gap-7 text-white z-30'>
-                                        <div className='flex items-center gap-2 text-xl'>
-                                            <i class="fi fi-ss-heart"></i>
-                                            <p className='texl-2xl mb-1'>0</p>
-                                        </div>
-                                        <div className='flex items-center gap-2 text-xl'>
-                                            <i class="fi fi-ss-comment-dots"></i>
-                                            <p className='texl-2xl mb-1'>0</p>
-                                        </div>
-                                    </div>
-                                </Card>
-                            </Link>
-                        ))}
-                    </div>
+                                            </CardContent>
+                                            <div className='w-full h-full absolute top-0 left-0 bg-black bg-opacity-70 opacity-0 group-hover:opacity-70 transition-opacity duration-300 flex items-center justify-center gap-7 text-white z-30'>
+                                                <div className='flex items-center gap-2 text-xl'>
+                                                    <i class="fi fi-ss-heart"></i>
+                                                    <p className='texl-2xl mb-1'>{post.likes.length}</p>
+                                                </div>
+                                                <div className='flex items-center gap-2 text-xl'>
+                                                    <i class="fi fi-ss-comment-dots"></i>
+                                                    <p className='texl-2xl mb-1'>0</p>
+                                                </div>
+                                            </div>
+                                        </Card>
+                                    </Link>
+                                ))}
+                            </div> :
+
+                            user._id == userProfile._id &&
+
+                            <div className="mt-6 grid grid-cols-3 gap-1 md:gap-4">
+                                {userProfile?.saved.map((post, i) => (
+                                    <Link>
+                                        <Card key={i} className="w-full h-full relative group cursor-pointer">
+                                            <CardContent className="p-0">
+                                                {
+                                                    post?.type == "post" ? <img
+                                                        src={post?.post}
+                                                        alt={`Post ${i + 1}`}
+                                                        className="w-full h-full object-cover"
+                                                    /> : <video
+                                                        src={post?.post}
+                                                        alt={`Post ${i + 1}`}
+                                                        className="w-full h-full object-cover"
+                                                        onPause={false}
+                                                    />
+                                                }
+
+                                            </CardContent>
+                                            <div className='w-full h-full absolute top-0 left-0 bg-black bg-opacity-70 opacity-0 group-hover:opacity-70 transition-opacity duration-300 flex items-center justify-center gap-3 md:gap-7 text-white z-30'>
+                                                <div className='flex items-center gap-2 lg:text-xl'>
+                                                    <i class="fi fi-ss-heart"></i>
+                                                    <p className='texl-2xl mb-1'>{post.likes.length}</p>
+                                                </div>
+                                                <div className='flex items-center gap-2 lg:text-xl'>
+                                                    <i class="fi fi-ss-comment-dots"></i>
+                                                    <p className='texl-2xl mb-1'>0</p>
+                                                </div>
+                                            </div>
+                                        </Card>
+                                    </Link>
+                                ))}
+                            </div>
+
+                    }
                 </div>
             </div >
 

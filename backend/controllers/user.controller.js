@@ -256,13 +256,30 @@ export const resetPassword = async (req, res) => {
 export const getUserProfile = async (req, res) => {
     try {
         const { userId } = req.params;
-        const user = await User.findById(userId).select("-password -__v").populate("posts");
+        const user = await User.findById(userId)
+            .select("-password -__v")
+            .populate({
+                path: 'posts',
+            })
+            .populate({
+                path: 'saved',
+                populate: {
+                    path: 'author',
+                    select: 'username fullname'
+                }
+            });
+
         if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+        // Ensure saved is an array
+        user.saved = Array.isArray(user.saved) ? user.saved : [];
+
         res.status(200).json({ success: true, user });
     } catch (error) {
         res.status(500).json({ success: false, message: "Something went wrong" });
     }
 }
+
 
 export const getSuggestedUsers = async (req, res) => {
     try {
