@@ -97,7 +97,7 @@ export function CreatePostDialogComponent({ open, onOpenChange }) {
         setPostFile(null)
         setReelFile(null);
         // console.log(res.data);
-        dispatch(addPost(res.data.post))
+        // dispatch(addPost(res.data.post))
       }
     } catch (error) {
       toast.error(error.response.data.message)

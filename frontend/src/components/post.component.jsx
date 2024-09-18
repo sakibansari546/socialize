@@ -13,7 +13,7 @@ const Post = ({ post }) => {
 
     const videoRef = useRef(null);
     const [isVisible, setIsVisible] = useState(false);
-    const [isLiked, setIsLiked] = useState(post.likes.includes(user._id));
+    const [isLiked, setIsLiked] = useState(post?.likes?.includes(user._id));
     const [isSaved, setIsSaved] = useState(post?.saved?.includes(user._id));
 
     const handleLikeOrNot = async () => {

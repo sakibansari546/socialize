@@ -331,7 +331,7 @@ const ProfilePage = () => {
                             <div className="mt-6 grid grid-cols-3 gap-1 md:gap-4">
                                 {userProfile?.saved.map((post, i) => (
                                     <Link>
-                                        <Card key={i} className="w-full h-full relative group cursor-pointer">
+                                        <Card key={i} className="aspect-square object-contain relative group cursor-pointer">
                                             <CardContent className="p-0">
                                                 {
                                                     post?.type == "post" ? <img
