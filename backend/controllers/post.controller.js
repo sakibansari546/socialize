@@ -136,3 +136,30 @@ export const likeOrDislike = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const saveOrUnsaved = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const userId = req.userId;
+        const post = await Post.findById(postId);
+        const user = await User.findById(userId);
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const isSaved = user.saved.includes(postId);
+        if (isSaved) {
+            await user.updateOne({ $pull: { saved: postId } });
+            return res.status(200).json({ success: true, message: 'Post unsaved successfully' });
+        } else {
+            await user.updateOne({ $push: { saved: postId } });
+            return res.status(200).json({ success: true, message: 'Post saved successfully' });
+        }
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
