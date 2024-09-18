@@ -13,6 +13,10 @@ const postSchema = new mongoose.Schema({
         type: String,
         default: ""
     },
+    saved: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
+    },
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",

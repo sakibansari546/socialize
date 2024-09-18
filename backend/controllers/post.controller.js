@@ -153,9 +153,11 @@ export const saveOrUnsaved = async (req, res) => {
         const isSaved = user.saved.includes(postId);
         if (isSaved) {
             await user.updateOne({ $pull: { saved: postId } });
+            await post.updateOne({ $pull: { saved: userId } });
             return res.status(200).json({ success: true, message: 'Post unsaved successfully' });
         } else {
             await user.updateOne({ $push: { saved: postId } });
+            await post.updateOne({ $push: { saved: userId } });
             return res.status(200).json({ success: true, message: 'Post saved successfully' });
         }
 

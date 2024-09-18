@@ -2,17 +2,19 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import AnimationWrapper from '../common/AnimationWrapper';
 import { useDispatch, useSelector } from 'react-redux';
-import { likeOrNot } from '../store/postSlice';
+import { likeOrNot, postSavedOrNot } from '../store/postSlice';
 import { toast } from 'sonner';
 
 const Post = ({ post }) => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const { user } = useSelector(state => state.user);
     const { posts } = useSelector(state => state.post);
+
     const videoRef = useRef(null);
     const [isVisible, setIsVisible] = useState(false);
     const [isLiked, setIsLiked] = useState(post.likes.includes(user._id));
+    const [isSaved, setIsSaved] = useState(post?.saved?.includes(user._id));
 
     const handleLikeOrNot = async () => {
         try {
@@ -51,6 +53,50 @@ const Post = ({ post }) => {
             // Rollback the like status in case of error
             setIsLiked(!isLiked);
             console.error('Error liking/unliking the post:', error);
+            toast.error(error.response?.data?.message || 'An error occurred.');
+        }
+    };
+
+    const handleSavedPost = async () => {
+        try {
+            // Optimistically toggle save status
+            setIsSaved(!isSaved);
+
+            // Create a copy of posts array and update the specific post's saved status
+            const updatedPosts = posts.map((p) => {
+                // Ensure saved is always an array
+                const savedIds = Array.isArray(p.saved) ? p.saved : [];
+
+                if (p._id === post._id) {
+                    return {
+                        ...p, // Copy the post object
+                        saved: isSaved
+                            ? savedIds.filter((id) => id !== user._id) // Remove save
+                            : [...savedIds, user._id], // Add save
+                    };
+                }
+                return p;
+            });
+
+            // Dispatch to update Redux state immediately
+            dispatch(postSavedOrNot(updatedPosts));
+
+            // Call API to actually save/unsave on the server
+            const res = await axios.post(
+                `http://localhost:3000/api/post/saved-unsaved/${post._id}`,
+                { userId: user._id },
+                { withCredentials: true }
+            );
+
+            // If server fails, rollback the change
+            if (!res.data.success) {
+                setIsSaved(!isSaved); // Reverse the optimistic update
+                toast.error(res.data.message || 'Something went wrong!');
+            }
+        } catch (error) {
+            // Rollback the save status in case of error
+            setIsSaved(!isSaved);
+            console.error('Error saving/unsaving the post:', error);
             toast.error(error.response?.data?.message || 'An error occurred.');
         }
     };
@@ -122,7 +168,9 @@ const Post = ({ post }) => {
                         <button><i className="fi fi-rr-paper-plane sm:text-2xl text-xl"></i></button>
                     </div>
                     <div>
-                        <i className="fi fi-rr-bookmark sm:text-2xl text-xl"></i>
+                        <button onClick={handleSavedPost}>
+                            {isSaved ? <i className="fi fi-sr-bookmark sm:text-2xl text-xl text-yellow-500"></i> : <i className="fi fi-rr-bookmark sm:text-2xl text-xl"></i>}
+                        </button>
                     </div>
                 </div>
 

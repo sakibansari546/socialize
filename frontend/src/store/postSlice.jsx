@@ -21,10 +21,13 @@ export const postSlice = createSlice({
         },
         likeOrNot: (state, action) => {
             state.posts = action.payload;
+        },
+        postSavedOrNot: (state, action) => {
+            state.posts = action.payload;
         }
     },
 })
 
-export const { fetchPosts, addPost, likeOrNot } = postSlice.actions
+export const { fetchPosts, addPost, likeOrNot, postSavedOrNot } = postSlice.actions
 
 export default postSlice.reducer

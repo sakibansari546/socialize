@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -15,11 +15,14 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UploadIcon from '../assets/post.png';
 import BtnLoader from './btn-loader.components'
+import { addPost } from '../store/postSlice';
 
 export function CreatePostDialogComponent({ open, onOpenChange }) {
   const inputRef = useRef();
+  const dispatch = useDispatch()
 
   const { user } = useSelector(state => state.user)
+  const { posts } = useSelector(state => state.post)
 
   const [activeTab, setActiveTab] = useState('post');
   const [filePreview, setFilePreview] = useState(null); // State for storing file preview URL
@@ -93,7 +96,8 @@ export function CreatePostDialogComponent({ open, onOpenChange }) {
         setCaption("");
         setPostFile(null)
         setReelFile(null);
-        console.log(res.data);
+        // console.log(res.data);
+        dispatch(addPost(res.data.post))
       }
     } catch (error) {
       toast.error(error.response.data.message)
