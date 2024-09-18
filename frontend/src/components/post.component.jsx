@@ -1,35 +1,82 @@
+import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import AnimationWrapper from '../common/AnimationWrapper';
-import { useSelector } from 'react-redux';
-const Post = ({ post }) => {
+import { useDispatch, useSelector } from 'react-redux';
+import { likeOrNot } from '../store/postSlice';
+import { toast } from 'sonner';
 
+const Post = ({ post }) => {
+    const dispatch = useDispatch()
+
+    const { user } = useSelector(state => state.user);
     const { posts } = useSelector(state => state.post);
     const videoRef = useRef(null);
     const [isVisible, setIsVisible] = useState(false);
+    const [isLiked, setIsLiked] = useState(post.likes.includes(user._id));
+
+    const handleLikeOrNot = async () => {
+        try {
+            // Optimistically toggle like status
+            setIsLiked(!isLiked);
+
+            // Create a copy of posts array and update the specific post's likes
+            const updatedPosts = posts.map((p) => {
+                if (p._id === post._id) {
+                    return {
+                        ...p, // Copy the post object
+                        likes: isLiked
+                            ? p.likes.filter((id) => id !== user._id) // Remove like
+                            : [...p.likes, user._id], // Add like
+                    };
+                }
+                return p;
+            });
+
+            // Dispatch to update Redux state immediately
+            dispatch(likeOrNot(updatedPosts));
+
+            // Call API to actually like/unlike on the server
+            const res = await axios.post(
+                `http://localhost:3000/api/post/like-dislike/${post._id}`,
+                { userId: user._id },
+                { withCredentials: true }
+            );
+
+            // If server fails, rollback the change
+            if (!res.data.success) {
+                setIsLiked(!isLiked); // Reverse the optimistic update
+                toast.error(res.data.message || 'Something went wrong!');
+            }
+        } catch (error) {
+            // Rollback the like status in case of error
+            setIsLiked(!isLiked);
+            console.error('Error liking/unliking the post:', error);
+            toast.error(error.response?.data?.message || 'An error occurred.');
+        }
+    };
+
 
     useEffect(() => {
-        // Create an Intersection Observer
         const observer = new IntersectionObserver(
             (entries) => {
                 const entry = entries[0];
-                setIsVisible(entry.isIntersecting); // Update state based on visibility
+                setIsVisible(entry.isIntersecting);
             },
-            { threshold: 0.5 } // Video is visible when at least 50% of it is in view
+            { threshold: 0.5 }
         );
 
         if (videoRef.current) {
-            observer.observe(videoRef.current); // Observe the video element
+            observer.observe(videoRef.current);
         }
 
         return () => {
             if (videoRef.current) {
-                observer.unobserve(videoRef.current); // Cleanup observer on unmount
+                observer.unobserve(videoRef.current);
             }
         };
     }, []);
 
     useEffect(() => {
-        // Play/pause video based on visibility
         if (isVisible && videoRef.current) {
             videoRef.current.play();
         } else if (videoRef.current) {
@@ -40,19 +87,17 @@ const Post = ({ post }) => {
     return (
         <AnimationWrapper>
             <div className='relative lg:w-[30vw] w-[90vw] h-[100%] bg-white py-4 px-5 z-20'>
-                <div>
-                    <div className='flex gap-4 items-center justify-between'>
-                        <div className='flex gap-3 items-center'>
-                            <img className='w-10 h-10 sm:w-8 sm:h-8 rounded-full object-cover' src={post?.author.profile_img} alt="" />
-                            <div>
-                                <h2 className='text-md sm:text-sm font-semibold'>@{post?.author.username}</h2>
-                                <p className='text-sm sm:text-xs text-gray-500'>{post?.author.fullname}</p>
-                            </div>
+                <div className='flex gap-4 items-center justify-between'>
+                    <div className='flex gap-3 items-center'>
+                        <img className='w-10 h-10 sm:w-8 sm:h-8 rounded-full object-cover' src={post?.author.profile_img} alt="" />
+                        <div>
+                            <h2 className='text-md sm:text-sm font-semibold'>@{post?.author.username}</h2>
+                            <p className='text-sm sm:text-xs text-gray-500'>{post?.author.fullname}</p>
                         </div>
-                        <button>
-                            <i className="fi fi-bs-menu-dots text-2xl sm:text-xl"></i>
-                        </button>
                     </div>
+                    <button>
+                        <i className="fi fi-bs-menu-dots text-2xl sm:text-xl"></i>
+                    </button>
                 </div>
 
                 <div className='my-5'>
@@ -70,7 +115,9 @@ const Post = ({ post }) => {
 
                 <div className='w-full flex items-center justify-between'>
                     <div className='flex items-center gap-7'>
-                        <button><i className="fi fi-rs-heart sm:text-2xl text-xl"></i></button>
+                        <button onClick={handleLikeOrNot}>
+                            {isLiked ? <i className="fi fi-sr-heart sm:text-2xl text-xl text-red-500"></i> : <i className="fi fi-rr-heart sm:text-2xl text-xl"></i>}
+                        </button>
                         <button><i className="fi fi-rs-comment-dots sm:text-2xl text-xl"></i></button>
                         <button><i className="fi fi-rr-paper-plane sm:text-2xl text-xl"></i></button>
                     </div>
@@ -81,17 +128,21 @@ const Post = ({ post }) => {
 
                 <div className='sm:text-lg text-base'><span className='font-semibold'>{post?.likes.length}</span> likes</div>
                 <div>
-                    <p className='text-sm max-sm:line-clamp-2'><span className='font-semibold'>@{post?.author.username} : </span> {post?.caption}</p>
+                    <p className='text-sm max-sm:line-clamp-2'>
+                        <span className='font-semibold'>@{post?.author.username} : </span> {post?.caption}
+                    </p>
                 </div>
-                <button className='text-sm sm:text-xs text-gray-500 py-2 hover:underline'>view all {post?.comments.length} comments</button>
+                <button className='text-sm sm:text-xs text-gray-500 py-2 hover:underline'>
+                    View all {post?.comments.length} comments
+                </button>
                 <div className='flex items-center gap-3'>
-                    <img className='w-8 h-8 rounded-full object-cover' src={post?.author.profile_img} alt="" />
+                    <img className='w-8 h-8 rounded-full object-cover' src={user.profile_img} alt="" />
                     <input className='w-full outline-none sm:text-sm' type="text" placeholder='Add a comment...' />
                     <button className='sm:text-xl text-lg font-bold'>Post</button>
                 </div>
             </div>
         </AnimationWrapper>
     );
-}
+};
 
 export default Post;
